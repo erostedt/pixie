@@ -4,7 +4,7 @@
 #include "stdio.h"
 
 
-Pixie_Rect pixie_rect_new(size_t x, size_t y, size_t width, size_t height)
+Pixie_Rect pixie_rect_new(int x, int y, size_t width, size_t height)
 {
     return (Pixie_Rect){.x=x, .y=y, .width=width, .height=height};
 }
@@ -72,7 +72,7 @@ void pixie_draw_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t color)
     }
 }
 
-void pixie_draw_circle(Pixie_Canvas *canvas, size_t cx, size_t cy, size_t radius, uint32_t color)
+void pixie_draw_disc(Pixie_Canvas *canvas, size_t cx, size_t cy, size_t radius, uint32_t color)
 {
     int min_x = (((int)cx - (int)radius) < 0) ? 0 : cx - radius;
     int min_y = (((int)cy - (int)radius) < 0) ? 0 : cy - radius;
@@ -96,9 +96,45 @@ void pixie_draw_circle(Pixie_Canvas *canvas, size_t cx, size_t cy, size_t radius
     }
 }
 
-void pixie_draw_circle_aa(Pixie_Canvas *canvas, size_t cx, size_t cy, size_t radius, size_t aa)
+void pixie_draw_disc_aa(Pixie_Canvas *canvas, size_t cx, size_t cy, size_t radius, size_t aa)
 {
 
+}
+
+void pixie_draw_circle(Pixie_Canvas *canvas, size_t cx, size_t cy, size_t radius, uint32_t color)
+{
+    int x = 0, y = radius;
+    int xc = cx, yc = cy;
+    uint32_t *pixels = canvas->pixels;
+    int width = canvas->width;
+    int height = canvas->height;
+    int offset = canvas->offset;
+    int stride = canvas->stride;
+
+    int p = 3 - 2 * (int)radius;
+
+    do 
+    {
+        pixie_try_set_pixel_int(pixels, width, height, stride, offset, xc + x, yc + y, color);
+        pixie_try_set_pixel_int(pixels, width, height, stride, offset, xc - x, yc + y, color);
+        pixie_try_set_pixel_int(pixels, width, height, stride, offset, xc + x, yc - y, color);
+        pixie_try_set_pixel_int(pixels, width, height, stride, offset, xc - x, yc - y, color);
+        pixie_try_set_pixel_int(pixels, width, height, stride, offset, xc + y, yc + x, color);
+        pixie_try_set_pixel_int(pixels, width, height, stride, offset, xc - y, yc + x, color);
+        pixie_try_set_pixel_int(pixels, width, height, stride, offset, xc + y, yc - x, color);
+        pixie_try_set_pixel_int(pixels, width, height, stride, offset, xc - y, yc - x, color);
+
+        x++;
+        if(p > 0)
+        {
+            y--;
+            p += 4*(x - y) + 10;
+        }
+        else
+        {
+            p += 4*x + 6;
+        }
+    } while (x < y);
 }
 
 void pixie_draw_ellipse(Pixie_Canvas *canvas, size_t cx, size_t cy, size_t a, size_t b)

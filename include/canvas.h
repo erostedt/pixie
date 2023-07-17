@@ -13,13 +13,13 @@
 
 typedef struct Pixie_Rect
 {
-    size_t x;
-    size_t y;
+    int x;
+    int y;
     size_t width;
     size_t height;
 } Pixie_Rect;
 
-Pixie_Rect pixie_rect_new(size_t x, size_t y, size_t width, size_t height);
+Pixie_Rect pixie_rect_new(int x, int y, size_t width, size_t height);
 
 typedef struct Pixie_Canvas
 {
@@ -49,6 +49,16 @@ static inline bool pixie_set_pixel(Pixie_Canvas *canvas, size_t x, size_t y, uin
     if ((x < canvas->width) && (y < canvas->height))
     {
         pixie_set_pixel_unsafe(canvas, x, y, color);
+        return true;
+    }
+    return false;
+}
+
+static inline bool pixie_try_set_pixel_int(uint32_t *pixels, int width, int height, int stride, int offset, int x, int y, uint32_t color)
+{
+    if ((x > -1) && (x < width) && (y < height) && (y > -1))
+    {
+        PIXEL_AT(pixels, x, y, stride, offset) = color;
         return true;
     }
     return false;
