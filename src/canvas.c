@@ -302,7 +302,7 @@ void pixie_draw_ellipse(Pixie_Canvas *canvas, Pixie_Point center, size_t a, size
     }
 }
 
-void _draw_bottom_flat_triangleTriangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color)
+void _draw_bottom_flat_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color)
 {
     float invslope1 = ((float)p2.x - (float)p1.x) / ((float)p2.y - (float)p1.y);
     float invslope2 = ((float)p3.x - (float)p1.x) / ((float)p3.y - (float)p1.y);
@@ -351,7 +351,7 @@ void pixie_draw_filled_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Poin
     
     if (p2.y == p3.y)
     {
-        _draw_bottom_flat_triangleTriangle(canvas, p1, p2, p3, color);
+        _draw_bottom_flat_triangle(canvas, p1, p2, p3, color);
     }
     
     else if (p1.y == p2.y)
@@ -366,7 +366,7 @@ void pixie_draw_filled_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Poin
             .y=p2.y,
         };
 
-        _draw_bottom_flat_triangleTriangle(canvas, p1, p2, p4, color);
+        _draw_bottom_flat_triangle(canvas, p1, p2, p4, color);
         _draw_top_flat_triangle(canvas, p2, p4, p3, color);
     }
 }
