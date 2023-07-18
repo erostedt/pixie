@@ -120,6 +120,18 @@ void pixie_draw_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t color)
 }
 
 
+void pixie_draw_filled_square(Pixie_Canvas *canvas, Pixie_Point top_left, size_t width, uint32_t color)
+{
+    pixie_draw_filled_rectangle(canvas, pixie_rect_new(top_left, width, width), color);
+}
+
+
+void pixie_draw_square(Pixie_Canvas *canvas, Pixie_Point top_left, size_t width, uint32_t color)
+{
+    pixie_draw_rectangle(canvas, pixie_rect_new(top_left, width, width), color);
+}
+
+
 void pixie_draw_filled_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t radius, uint32_t color)
 {
     int cx = center.x, cy = center.y;

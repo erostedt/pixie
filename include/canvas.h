@@ -43,6 +43,9 @@ void pixie_canvas_save_as_ppm(Pixie_Canvas *canvas, const char *file_path);
 void pixie_draw_filled_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t color);
 void pixie_draw_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t color);
 
+void pixie_draw_filled_square(Pixie_Canvas *canvas, Pixie_Point top_left, size_t width, uint32_t color);
+void pixie_draw_square(Pixie_Canvas *canvas, Pixie_Point top_left, size_t width, uint32_t color);
+
 void pixie_draw_filled_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t radius, uint32_t color);
 void pixie_draw_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t radius, uint32_t color);
 
