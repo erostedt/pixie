@@ -11,15 +11,20 @@
 #define ALPHA(pixel) (((pixel) >> 0) & 0xFF)
 #define COLOR(r, g, b, a) (((r) << 24) | ((g) << 16) | ((b) << 8) | (a))
 
+typedef struct Pixie_Point
+{
+    size_t x, y;
+} Pixie_Point;
+
 typedef struct Pixie_Rect
 {
-    size_t x;
-    size_t y;
+    Pixie_Point top_left;
     size_t width;
     size_t height;
 } Pixie_Rect;
 
-Pixie_Rect pixie_rect_new(size_t x, size_t y, size_t width, size_t height);
+Pixie_Rect pixie_rect_new(Pixie_Point top_left, size_t width, size_t height);
+
 
 typedef struct Pixie_Canvas
 {
@@ -38,13 +43,16 @@ void pixie_canvas_save_as_ppm(Pixie_Canvas *canvas, const char *file_path);
 void pixie_draw_filled_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t color);
 void pixie_draw_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t color);
 
-void pixie_draw_filled_circle(Pixie_Canvas *canvas, size_t cx, size_t cy, size_t radius, uint32_t color);
-void pixie_draw_circle(Pixie_Canvas *canvas, size_t cx, size_t cy, size_t radius, uint32_t color);
+void pixie_draw_filled_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t radius, uint32_t color);
+void pixie_draw_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t radius, uint32_t color);
 
-void pixie_draw_filled_ellipse(Pixie_Canvas *canvas, size_t cx, size_t cy, size_t a, size_t b, uint32_t color);
-void pixie_draw_ellipse(Pixie_Canvas *canvas, size_t cx, size_t cy, size_t a, size_t b, uint32_t color);
+void pixie_draw_filled_ellipse(Pixie_Canvas *canvas, Pixie_Point center, size_t a, size_t b, uint32_t color);
+void pixie_draw_ellipse(Pixie_Canvas *canvas, Pixie_Point center, size_t a, size_t b, uint32_t color);
 
-void pixie_draw_line(Pixie_Canvas *canvas, size_t x1, size_t y1, size_t x2, size_t y2, uint32_t color);
+void pixie_draw_filled_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color);
+void pixie_draw_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color);
+
+void pixie_draw_line(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, uint32_t color);
 
 static inline void pixie_draw_pixel_unsafe(Pixie_Canvas *canvas, size_t x, size_t y, uint32_t color) 
 { 
@@ -69,5 +77,12 @@ static inline bool pixie_draw_pixel_int(uint32_t *pixels, int width, int height,
         return true;
     }
     return false;
+}
+
+static inline void swap_points(Pixie_Point *p1, Pixie_Point *p2)
+{
+    Pixie_Point temp = *p1;
+    *p1 = *p2;
+    *p2 = temp; 
 }
 #endif
