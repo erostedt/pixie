@@ -1,7 +1,7 @@
-Add thickness to lines and hollow shapes.
+Add thickness to hollow shapes.
 Rotated objects?
 circle with thickness (donut?)
 text?
 Simple pendulum
 double pendulum using own graph lib
-Consta saker?
+add AA

@@ -137,11 +137,6 @@ void pixie_draw_filled_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t r
 {
     int x = 0, y = radius;
     int xc = center.x, yc = center.y;
-    uint32_t *pixels = canvas->pixels;
-    int width = canvas->width;
-    int height = canvas->height;
-    int stride = canvas->stride;
-
     int p = 3 - 2 * (int)radius;
 
     do 
