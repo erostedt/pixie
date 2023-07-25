@@ -1,4 +1,4 @@
-#include "canvas.h"
+#include "draw.h"
 #include "stdio.h"
 
 #define CANVAS_WIDTH 640
