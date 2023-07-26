@@ -68,13 +68,12 @@ Pixie_Point pixie_point_list_pop_unsafe(Pixie_Point_List *list)
 void pixie_floodfill(Pixie_Image *image, Pixie_Point seed, uint32_t fill_value)
 {
     assert((seed.x < image->width) && (seed.y < image->height));
-
-    Pixie_Point_List stack = pixie_point_list_new(20);
     uint32_t *pixels = image->pixels;
     size_t stride = image->stride;
-
     uint32_t original_value = PIXEL_AT(pixels, seed.x, seed.y, stride);
+    if (fill_value == original_value) return;
 
+    Pixie_Point_List stack = pixie_point_list_new(20);
     pixie_point_list_append(&stack, seed);
 
     while (stack.size > 0)
