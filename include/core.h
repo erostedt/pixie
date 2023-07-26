@@ -26,19 +26,19 @@ typedef struct Pixie_Rect
 Pixie_Rect pixie_rect_new(Pixie_Point top_left, size_t width, size_t height);
 
 
-typedef struct Pixie_Canvas
+typedef struct Pixie_Image
 {
     size_t width;
     size_t height;
     size_t stride;
     uint32_t *pixels;
-} Pixie_Canvas;
+} Pixie_Image;
 
-Pixie_Canvas pixie_canvas_new(size_t width, size_t height);
-Pixie_Canvas pixie_subcanvas_new(Pixie_Canvas *canvas, Pixie_Rect region);
-void pixie_canvas_free(Pixie_Canvas *canvas);
-void pixie_canvas_fill(Pixie_Canvas *canvas, uint32_t color);
-void pixie_canvas_save_as_ppm(Pixie_Canvas *canvas, const char *file_path);
+Pixie_Image pixie_image_new(size_t width, size_t height);
+Pixie_Image pixie_subimage_new(Pixie_Image *image, Pixie_Rect region);
+void pixie_image_free(Pixie_Image *image);
+void pixie_image_fill(Pixie_Image *image, uint32_t color);
+void pixie_image_save_as_ppm(Pixie_Image *image, const char *file_path);
 
 static inline void swap_points(Pixie_Point *p1, Pixie_Point *p2)
 {

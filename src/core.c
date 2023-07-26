@@ -11,36 +11,36 @@ Pixie_Rect pixie_rect_new(Pixie_Point top_left, size_t width, size_t height)
 }
 
 
-Pixie_Canvas pixie_canvas_new(size_t width, size_t height)
+Pixie_Image pixie_image_new(size_t width, size_t height)
 {
     uint32_t *pixels = calloc(width * height, sizeof(uint32_t));
     assert(pixels != NULL);
-    return (Pixie_Canvas){ .width=width, .height=height, .stride=width, .pixels=pixels };
+    return (Pixie_Image){ .width=width, .height=height, .stride=width, .pixels=pixels };
 }
 
 
-Pixie_Canvas pixie_subcanvas_new(Pixie_Canvas *canvas, Pixie_Rect region)
+Pixie_Image pixie_subimage_new(Pixie_Image *image, Pixie_Rect region)
 {
-    assert(((region.top_left.x + region.width) < canvas->width) && ((region.top_left.y + region.height) < canvas->height));
-    uint32_t *data = canvas->pixels + (region.top_left.y * canvas->stride + region.top_left.x);
-    return (Pixie_Canvas) { .width=region.width, .height=region.height, .stride=canvas->stride, .pixels=data };
+    assert(((region.top_left.x + region.width) < image->width) && ((region.top_left.y + region.height) < image->height));
+    uint32_t *data = image->pixels + (region.top_left.y * image->stride + region.top_left.x);
+    return (Pixie_Image) { .width=region.width, .height=region.height, .stride=image->stride, .pixels=data };
 }
 
 
-void pixie_canvas_free(Pixie_Canvas *canvas)
+void pixie_image_free(Pixie_Image *image)
 {
-    canvas->height = canvas->stride = canvas->width = 0;
-    free(canvas->pixels);
-    canvas = NULL;
+    image->height = image->stride = image->width = 0;
+    free(image->pixels);
+    image = NULL;
 }
 
 
-void pixie_canvas_fill(Pixie_Canvas *canvas, uint32_t color)
+void pixie_image_fill(Pixie_Image *image, uint32_t color)
 {
-    uint32_t *pixels = canvas->pixels;
-    size_t width = canvas->width;
-    size_t height = canvas->height;
-    size_t stride = canvas->stride;
+    uint32_t *pixels = image->pixels;
+    size_t width = image->width;
+    size_t height = image->height;
+    size_t stride = image->stride;
     for (size_t y = 0; y < height; y++)
     {
         for (size_t x = 0; x < width; x++)
@@ -49,7 +49,7 @@ void pixie_canvas_fill(Pixie_Canvas *canvas, uint32_t color)
 }
 
 
-void pixie_canvas_save_as_ppm(Pixie_Canvas *canvas, const char *file_path)
+void pixie_image_save_as_ppm(Pixie_Image *image, const char *file_path)
 {
     FILE *f = fopen(file_path, "wb");
     if (f == NULL) 
@@ -57,11 +57,11 @@ void pixie_canvas_save_as_ppm(Pixie_Canvas *canvas, const char *file_path)
         fprintf(stderr, "ERROR: could not open file %s: %m\n", file_path);
         exit(1);
     }
-    size_t stride = canvas->stride;
-    size_t width = canvas->width;
-    size_t height = canvas->height;
+    size_t stride = image->stride;
+    size_t width = image->width;
+    size_t height = image->height;
     
-    uint32_t *pixels = canvas->pixels;
+    uint32_t *pixels = image->pixels;
 
 
     fprintf(f, "P6\n%zu %zu 255\n", width, height);

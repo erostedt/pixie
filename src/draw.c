@@ -3,13 +3,13 @@
 #include "math.h"
 
 
-void pixie_draw_filled_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t color)
+void pixie_draw_filled_rectangle(Pixie_Image *image, Pixie_Rect rect, uint32_t color)
 {
     size_t rx = rect.top_left.x, ry = rect.top_left.y; 
-    size_t max_x = (canvas->width > (rx + rect.width)) ? rx + rect.width : canvas->width;
-    size_t max_y = (canvas->height > (ry + rect.height)) ? ry + rect.height : canvas->height;
-    uint32_t *pixels = canvas->pixels;
-    size_t stride = canvas->stride;
+    size_t max_x = (image->width > (rx + rect.width)) ? rx + rect.width : image->width;
+    size_t max_y = (image->height > (ry + rect.height)) ? ry + rect.height : image->height;
+    uint32_t *pixels = image->pixels;
+    size_t stride = image->stride;
 
     for (size_t y = ry; y < max_y; y++)
     {
@@ -21,13 +21,13 @@ void pixie_draw_filled_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t
 }
 
 
-void pixie_draw_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t color)
+void pixie_draw_rectangle(Pixie_Image *image, Pixie_Rect rect, uint32_t color)
 {       
     size_t rx = rect.top_left.x, ry = rect.top_left.y; 
-    size_t max_x = (canvas->width > (rx + rect.width)) ? rx + rect.width : canvas->width;
-    size_t max_y = (canvas->height > (ry + rect.height)) ? ry + rect.height : canvas->height;
-    uint32_t *pixels = canvas->pixels;
-    size_t stride = canvas->stride;
+    size_t max_x = (image->width > (rx + rect.width)) ? rx + rect.width : image->width;
+    size_t max_y = (image->height > (ry + rect.height)) ? ry + rect.height : image->height;
+    uint32_t *pixels = image->pixels;
+    size_t stride = image->stride;
 
     for (size_t y = ry; y < max_y; y++)
     {
@@ -43,19 +43,19 @@ void pixie_draw_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t color)
 }
 
 
-void pixie_draw_filled_square(Pixie_Canvas *canvas, Pixie_Point top_left, size_t width, uint32_t color)
+void pixie_draw_filled_square(Pixie_Image *image, Pixie_Point top_left, size_t width, uint32_t color)
 {
-    pixie_draw_filled_rectangle(canvas, pixie_rect_new(top_left, width, width), color);
+    pixie_draw_filled_rectangle(image, pixie_rect_new(top_left, width, width), color);
 }
 
 
-void pixie_draw_square(Pixie_Canvas *canvas, Pixie_Point top_left, size_t width, uint32_t color)
+void pixie_draw_square(Pixie_Image *image, Pixie_Point top_left, size_t width, uint32_t color)
 {
-    pixie_draw_rectangle(canvas, pixie_rect_new(top_left, width, width), color);
+    pixie_draw_rectangle(image, pixie_rect_new(top_left, width, width), color);
 }
 
 
-void pixie_draw_filled_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t radius, uint32_t color)
+void pixie_draw_filled_circle(Pixie_Image *image, Pixie_Point center, size_t radius, uint32_t color)
 {
     int x = 0, y = radius;
     int xc = center.x, yc = center.y;
@@ -63,15 +63,15 @@ void pixie_draw_filled_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t r
 
     do 
     {
-        pixie_draw_line(canvas, (Pixie_Point){xc + x, yc + y}, (Pixie_Point){xc - x, yc + y}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc - x, yc + y}, (Pixie_Point){xc - x, yc - y}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc - x, yc - y}, (Pixie_Point){xc + x, yc - y}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc + x, yc - y}, (Pixie_Point){xc + x, yc + y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc + x, yc + y}, (Pixie_Point){xc - x, yc + y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc - x, yc + y}, (Pixie_Point){xc - x, yc - y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc - x, yc - y}, (Pixie_Point){xc + x, yc - y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc + x, yc - y}, (Pixie_Point){xc + x, yc + y}, color);
 
-        pixie_draw_line(canvas, (Pixie_Point){xc + y, yc + x}, (Pixie_Point){xc - y, yc + x}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc - y, yc + x}, (Pixie_Point){xc - y, yc - x}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc - y, yc - x}, (Pixie_Point){xc + y, yc - x}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc + y, yc - x}, (Pixie_Point){xc + y, yc + x}, color);
+        pixie_draw_line(image, (Pixie_Point){xc + y, yc + x}, (Pixie_Point){xc - y, yc + x}, color);
+        pixie_draw_line(image, (Pixie_Point){xc - y, yc + x}, (Pixie_Point){xc - y, yc - x}, color);
+        pixie_draw_line(image, (Pixie_Point){xc - y, yc - x}, (Pixie_Point){xc + y, yc - x}, color);
+        pixie_draw_line(image, (Pixie_Point){xc + y, yc - x}, (Pixie_Point){xc + y, yc + x}, color);
         
         x++;
         if(p > 0)
@@ -87,18 +87,18 @@ void pixie_draw_filled_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t r
 }
 
 
-void pixie_draw_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t radius, uint32_t color)
+void pixie_draw_circle(Pixie_Image *image, Pixie_Point center, size_t radius, uint32_t color)
 {
     size_t cx = center.x, cy = center.y;
-    assert(((cx + radius) < canvas->width) && ((cy + radius) < canvas->height));
+    assert(((cx + radius) < image->width) && ((cy + radius) < image->height));
     assert((cx >= radius) && (cy >= radius));
     
     int x = 0, y = radius;
     int xc = center.x, yc = center.y;
-    uint32_t *pixels = canvas->pixels;
-    int width = canvas->width;
-    int height = canvas->height;
-    int stride = canvas->stride;
+    uint32_t *pixels = image->pixels;
+    int width = image->width;
+    int height = image->height;
+    int stride = image->stride;
 
     int p = 3 - 2 * (int)radius;
 
@@ -127,10 +127,10 @@ void pixie_draw_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t radius, 
 }
 
 
-void pixie_draw_ellipse(Pixie_Canvas *canvas, Pixie_Point center, size_t a, size_t b, uint32_t color)
+void pixie_draw_ellipse(Pixie_Image *image, Pixie_Point center, size_t a, size_t b, uint32_t color)
 {
     size_t cx = center.x, cy = center.y;
-    assert(((cx + a) < canvas->width) && ((cy + b) < canvas->height));
+    assert(((cx + a) < image->width) && ((cy + b) < image->height));
     assert((cx >= a) && (cy >= b));
 
     int xc = cx, yc = cy, rx = a, ry = b;
@@ -141,8 +141,8 @@ void pixie_draw_ellipse(Pixie_Canvas *canvas, Pixie_Point center, size_t a, size
     float d1 = (ry * ry) - (rx * rx * ry) + (0.25 * rx * rx);
     float dx = 2 * ry * ry * x;
     float dy = 2 * rx * rx * y;
-    uint32_t *pixels = canvas->pixels;
-    size_t stride = canvas->stride;
+    uint32_t *pixels = image->pixels;
+    size_t stride = image->stride;
  
     while (dx < dy) 
     {
@@ -193,10 +193,10 @@ void pixie_draw_ellipse(Pixie_Canvas *canvas, Pixie_Point center, size_t a, size
 }
 
 
-void pixie_draw_filled_ellipse(Pixie_Canvas *canvas, Pixie_Point center, size_t a, size_t b, uint32_t color)
+void pixie_draw_filled_ellipse(Pixie_Image *image, Pixie_Point center, size_t a, size_t b, uint32_t color)
 {
     size_t cx = center.x, cy = center.y;
-    assert(((cx + a) < canvas->width) && ((cy + b) < canvas->height));
+    assert(((cx + a) < image->width) && ((cy + b) < image->height));
     assert((cx >= a) && (cy >= b));
 
     int xc = cx, yc = cy, rx = a, ry = b;
@@ -210,10 +210,10 @@ void pixie_draw_filled_ellipse(Pixie_Canvas *canvas, Pixie_Point center, size_t 
  
     while (dx < dy) 
     {
-        pixie_draw_line(canvas, (Pixie_Point){xc + x, yc + y}, (Pixie_Point){xc - x, yc + y}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc - x, yc + y}, (Pixie_Point){xc - x, yc - y}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc - x, yc - y}, (Pixie_Point){xc + x, yc - y}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc + x, yc - y}, (Pixie_Point){xc + x, yc + y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc + x, yc + y}, (Pixie_Point){xc - x, yc + y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc - x, yc + y}, (Pixie_Point){xc - x, yc - y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc - x, yc - y}, (Pixie_Point){xc + x, yc - y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc + x, yc - y}, (Pixie_Point){xc + x, yc + y}, color);
  
         if (d1 < 0) 
         {
@@ -234,10 +234,10 @@ void pixie_draw_filled_ellipse(Pixie_Canvas *canvas, Pixie_Point center, size_t 
     float d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) + ((rx * rx) * ((y - 1) * (y - 1))) - (rx * rx * ry * ry);
     while (y >= 0) 
     {
-        pixie_draw_line(canvas, (Pixie_Point){xc + x, yc + y}, (Pixie_Point){xc - x, yc + y}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc - x, yc + y}, (Pixie_Point){xc - x, yc - y}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc - x, yc - y}, (Pixie_Point){xc + x, yc - y}, color);
-        pixie_draw_line(canvas, (Pixie_Point){xc + x, yc - y}, (Pixie_Point){xc + x, yc + y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc + x, yc + y}, (Pixie_Point){xc - x, yc + y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc - x, yc + y}, (Pixie_Point){xc - x, yc - y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc - x, yc - y}, (Pixie_Point){xc + x, yc - y}, color);
+        pixie_draw_line(image, (Pixie_Point){xc + x, yc - y}, (Pixie_Point){xc + x, yc + y}, color);
  
         if (d2 > 0) 
         {
@@ -256,7 +256,7 @@ void pixie_draw_filled_ellipse(Pixie_Canvas *canvas, Pixie_Point center, size_t 
     }
 }
 
-void _draw_bottom_flat_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color)
+void _draw_bottom_flat_triangle(Pixie_Image *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color)
 {
     float invslope1 = ((float)p2.x - (float)p1.x) / ((float)p2.y - (float)p1.y);
     float invslope2 = ((float)p3.x - (float)p1.x) / ((float)p3.y - (float)p1.y);
@@ -266,13 +266,13 @@ void _draw_bottom_flat_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Poin
 
     for (size_t sy = p1.y; sy <= p2.y; sy++)
     {
-        pixie_draw_line(canvas, (Pixie_Point){(size_t)curx1, sy}, (Pixie_Point){(size_t)curx2, sy}, color);
+        pixie_draw_line(image, (Pixie_Point){(size_t)curx1, sy}, (Pixie_Point){(size_t)curx2, sy}, color);
         curx1 += invslope1;
         curx2 += invslope2; 
     }
 }
 
-void _draw_top_flat_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color)
+void _draw_top_flat_triangle(Pixie_Image *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color)
 {
     float invslope1 = ((float)p3.x - (float)p1.x) / ((float)p3.y - (float)p1.y);
     float invslope2 = ((float)p3.x - (float)p2.x) / ((float)p3.y - (float)p2.y);
@@ -282,21 +282,21 @@ void _draw_top_flat_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p
 
     for (size_t sy = p3.y; sy > p1.y; sy--)
     {
-        pixie_draw_line(canvas, (Pixie_Point){curx1, sy}, (Pixie_Point){curx2, sy}, color);
+        pixie_draw_line(image, (Pixie_Point){curx1, sy}, (Pixie_Point){curx2, sy}, color);
         curx1 -= invslope1;
         curx2 -= invslope2;
     }
 }
 
 
-void pixie_draw_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color)
+void pixie_draw_triangle(Pixie_Image *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color)
 {
-    pixie_draw_line(canvas, p1, p2, color);
-    pixie_draw_line(canvas, p1, p3, color);
-    pixie_draw_line(canvas, p2, p3, color);
+    pixie_draw_line(image, p1, p2, color);
+    pixie_draw_line(image, p1, p3, color);
+    pixie_draw_line(image, p2, p3, color);
 }
 
-void pixie_draw_filled_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color)
+void pixie_draw_filled_triangle(Pixie_Image *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, uint32_t color)
 {
     // http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
     if (p1.y > p2.y) swap_points(&p1, &p2);
@@ -305,12 +305,12 @@ void pixie_draw_filled_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Poin
     
     if (p2.y == p3.y)
     {
-        _draw_bottom_flat_triangle(canvas, p1, p2, p3, color);
+        _draw_bottom_flat_triangle(image, p1, p2, p3, color);
     }
     
     else if (p1.y == p2.y)
     {
-        _draw_top_flat_triangle(canvas, p1, p2, p3, color);
+        _draw_top_flat_triangle(image, p1, p2, p3, color);
     }
     else
     {
@@ -320,13 +320,13 @@ void pixie_draw_filled_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Poin
             .y=p2.y,
         };
 
-        _draw_bottom_flat_triangle(canvas, p1, p2, p4, color);
-        _draw_top_flat_triangle(canvas, p2, p4, p3, color);
+        _draw_bottom_flat_triangle(image, p1, p2, p4, color);
+        _draw_top_flat_triangle(image, p2, p4, p3, color);
     }
 }
 
 
-void _draw_line_low(Pixie_Canvas *canvas, int x1, int y1, int x2, int y2, uint32_t color)
+void _draw_line_low(Pixie_Image *image, int x1, int y1, int x2, int y2, uint32_t color)
 {
     int dx = x2 - x1;
     int dy = y2 - y1;
@@ -338,10 +338,10 @@ void _draw_line_low(Pixie_Canvas *canvas, int x1, int y1, int x2, int y2, uint32
     }
     int D = (2 * dy) - dx;
     int y = y1;
-    uint32_t *pixels = canvas->pixels;
-    int stride = canvas->stride;
-    int x_max = (int)canvas->width;
-    int y_max = (int)canvas->height;
+    uint32_t *pixels = image->pixels;
+    int stride = image->stride;
+    int x_max = (int)image->width;
+    int y_max = (int)image->height;
 
     for (int x = x1; x < x2; x++)
     {
@@ -360,7 +360,7 @@ void _draw_line_low(Pixie_Canvas *canvas, int x1, int y1, int x2, int y2, uint32
     }
 }
 
-void _draw_line_high(Pixie_Canvas *canvas, int x1, int y1, int x2, int y2, uint32_t color)
+void _draw_line_high(Pixie_Image *image, int x1, int y1, int x2, int y2, uint32_t color)
 {
     int dx = x2 - x1;
     int dy = y2 - y1;
@@ -373,10 +373,10 @@ void _draw_line_high(Pixie_Canvas *canvas, int x1, int y1, int x2, int y2, uint3
 
     int D = (2 * dx) - dy;
     int x = x1;
-    uint32_t *pixels = canvas->pixels;
-    int stride = canvas->stride;
-    int x_max = (int)canvas->width;
-    int y_max = (int)canvas->height;
+    uint32_t *pixels = image->pixels;
+    int stride = image->stride;
+    int x_max = (int)image->width;
+    int y_max = (int)image->height;
     for (int y = y1; y < y2; y++)
     {
         if ((x > -1) && (x < x_max) && (y > -1) && (y < y_max)) 
@@ -394,7 +394,7 @@ void _draw_line_high(Pixie_Canvas *canvas, int x1, int y1, int x2, int y2, uint3
     }
 }
 
-void pixie_draw_line(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, uint32_t color)
+void pixie_draw_line(Pixie_Image *image, Pixie_Point p1, Pixie_Point p2, uint32_t color)
 {
     // Bresenham
     int ix1 = p1.x, ix2 = p2.x;
@@ -404,35 +404,35 @@ void pixie_draw_line(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, uint3
     {
 
         if (ix2 < ix1)
-            _draw_line_low(canvas, ix2, iy2, ix1, iy1, color);
+            _draw_line_low(image, ix2, iy2, ix1, iy1, color);
         else
-            _draw_line_low(canvas, ix1, iy1, ix2, iy2, color);
+            _draw_line_low(image, ix1, iy1, ix2, iy2, color);
     }
     else
     {
 
         if (iy2 < iy1)
-            _draw_line_high(canvas, ix2, iy2, ix1, iy1, color);
+            _draw_line_high(image, ix2, iy2, ix1, iy1, color);
         else
-            _draw_line_high(canvas, ix1, iy1, ix2, iy2, color);
+            _draw_line_high(image, ix1, iy1, ix2, iy2, color);
     }
 }
 
-void pixie_draw_thick_line(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, size_t thickness, uint32_t color)
+void pixie_draw_thick_line(Pixie_Image *image, Pixie_Point p1, Pixie_Point p2, size_t thickness, uint32_t color)
 {
     if (thickness == 0) return;
     if (thickness == 1) 
     {
-        pixie_draw_line(canvas, p1, p2, color);
+        pixie_draw_line(image, p1, p2, color);
         return;
     }
 
     if (p1.x == p2.x)
     {
         if (p2.y > p1.y)
-            pixie_draw_thick_vline(canvas, p1.x, p1.y, p2.y, thickness, color);
+            pixie_draw_thick_vline(image, p1.x, p1.y, p2.y, thickness, color);
         else
-            pixie_draw_thick_vline(canvas, p1.x, p2.y, p1.y, thickness, color);
+            pixie_draw_thick_vline(image, p1.x, p2.y, p1.y, thickness, color);
         
         return;
     }
@@ -448,8 +448,8 @@ void pixie_draw_thick_line(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2,
         float wy = (thickness-1) * sqrt((dx*dx) + (dy*dy)) / (2*adx);
         for(size_t i = 0; i < wy; i++)
         {
-            pixie_draw_line(canvas, (Pixie_Point){x1, y1-i}, (Pixie_Point){x2, y2-i}, color);
-            pixie_draw_line(canvas, (Pixie_Point){x1, y1+i}, (Pixie_Point){x2, y2+i}, color);
+            pixie_draw_line(image, (Pixie_Point){x1, y1-i}, (Pixie_Point){x2, y2-i}, color);
+            pixie_draw_line(image, (Pixie_Point){x1, y1+i}, (Pixie_Point){x2, y2+i}, color);
         }
     }
      else
@@ -457,52 +457,52 @@ void pixie_draw_thick_line(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2,
         float wx = (thickness-1) * sqrt((dx*dx) + (dy*dy)) / (2*ady);
         for(size_t i =0; i < wx; i++)
         {
-            pixie_draw_line(canvas, (Pixie_Point){x1-i, y1}, (Pixie_Point){x2, y2}, color);
-            pixie_draw_line(canvas, (Pixie_Point){x1+i, y1}, (Pixie_Point){x2+i, y2}, color);
+            pixie_draw_line(image, (Pixie_Point){x1-i, y1}, (Pixie_Point){x2, y2}, color);
+            pixie_draw_line(image, (Pixie_Point){x1+i, y1}, (Pixie_Point){x2+i, y2}, color);
         }
     }
 }
 
 
-void pixie_draw_vline(Pixie_Canvas *canvas, size_t x, size_t ymin, size_t ymax, uint32_t color)
+void pixie_draw_vline(Pixie_Image *image, size_t x, size_t ymin, size_t ymax, uint32_t color)
 {
     assert(ymin <= ymax);
-    size_t max_y = (ymax >= canvas->height) ? canvas->height : ymax;
-    uint32_t *pixels = canvas->pixels;
-    size_t stride = canvas->stride;
+    size_t max_y = (ymax >= image->height) ? image->height : ymax;
+    uint32_t *pixels = image->pixels;
+    size_t stride = image->stride;
 
     for (size_t y = ymin; y < max_y; y++)
         PIXEL_AT(pixels, x, y, stride) = color;
 }
 
 
-void pixie_draw_hline(Pixie_Canvas *canvas, size_t y, size_t xmin, size_t xmax, uint32_t color)
+void pixie_draw_hline(Pixie_Image *image, size_t y, size_t xmin, size_t xmax, uint32_t color)
 {
     assert(xmin <= xmax);
-    size_t max_x = (xmax >= canvas->width) ? canvas->width : xmax;
-    uint32_t *pixels = canvas->pixels;
-    size_t stride = canvas->stride;
+    size_t max_x = (xmax >= image->width) ? image->width : xmax;
+    uint32_t *pixels = image->pixels;
+    size_t stride = image->stride;
 
     for (size_t x = xmin; x < max_x; x++)
         PIXEL_AT(pixels, x, y, stride) = color;
 }
 
 
-void pixie_draw_thick_vline(Pixie_Canvas *canvas, size_t x , size_t ymin, size_t ymax, size_t thickness, uint32_t color)
+void pixie_draw_thick_vline(Pixie_Image *image, size_t x , size_t ymin, size_t ymax, size_t thickness, uint32_t color)
 {
     // fix so that n and n+1 is not the same.
-    assert(x < canvas->width);
+    assert(x < image->width);
     assert(ymax >= ymin);
     assert((thickness/2) < ymin + 1);
-    assert(((thickness/2) +  ymax) < canvas->height);
+    assert(((thickness/2) +  ymax) < image->height);
     if (thickness == 0) return;
     
-    pixie_draw_vline(canvas, x, ymin, ymax, color);
+    pixie_draw_vline(image, x, ymin, ymax, color);
     size_t half_thickness = thickness/2 + 1;
     for (size_t dx = 1; dx < half_thickness; dx++ )
     {
-        pixie_draw_vline(canvas, x + dx, ymin, ymax, color);
-        pixie_draw_vline(canvas, x - dx - 1, ymin, ymax, color);
+        pixie_draw_vline(image, x + dx, ymin, ymax, color);
+        pixie_draw_vline(image, x - dx - 1, ymin, ymax, color);
 
     }
 
