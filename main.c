@@ -1,6 +1,7 @@
 #include "draw.h"
 #include "floodfill.h"
 #include "stdio.h"
+#include "resize.h"
 
 #define IMAGE_WIDTH 640
 #define IMAGE_HEIGHT 480
@@ -21,5 +22,13 @@ int main()
     pixie_draw_line(&image, (Pixie_Point){25, 100}, (Pixie_Point){100, 300}, COLOR(255, 0, 0, 255));
     pixie_draw_thick_line(&image, (Pixie_Point){40, 100}, (Pixie_Point){150, 300}, 5, COLOR(255, 0, 0, 255));
     pixie_image_save_as_ppm(&image, "image.ppm");
+
+    Pixie_Image copy = pixie_image_copy(&image);
+    pixie_resize_bilinear(&copy, (size_t)(IMAGE_WIDTH * 1.5), (size_t)(IMAGE_HEIGHT * 1.5));
+    pixie_resize_nearest_neighbor(&image, (size_t)(IMAGE_WIDTH * 1.5), (size_t)(IMAGE_HEIGHT * 1.5));
+
+    pixie_image_save_as_ppm(&copy, "image_bl.ppm");
+    pixie_image_save_as_ppm(&image, "image_nn.ppm");
+    
     return 0;
 }

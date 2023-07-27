@@ -3,6 +3,7 @@
 #include "assert.h"
 #include "stdio.h"
 #include "math.h"
+#include "memory.h"
 
 
 Pixie_Rect pixie_rect_new(Pixie_Point top_left, size_t width, size_t height)
@@ -46,6 +47,15 @@ void pixie_image_fill(Pixie_Image *image, uint32_t color)
         for (size_t x = 0; x < width; x++)
             PIXEL_AT(pixels, x, y, stride) = color;
     }
+}
+
+Pixie_Image pixie_image_copy(Pixie_Image *image)
+{
+    uint32_t *pixels = (uint32_t*)malloc(image->width * image->height * sizeof(uint32_t));
+    assert(pixels != NULL);
+    memcpy(pixels, image->pixels, image->height * image->width * sizeof(uint32_t));
+    return (Pixie_Image) {.width=image->width, .height=image->height, .stride=image->stride, .pixels=pixels};
+
 }
 
 

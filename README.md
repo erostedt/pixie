@@ -9,6 +9,5 @@ add AA
 Connected components.
 Optical flow
 Sift
-Bilinear and/or NN Resize
 Edge detection / convolutions
 grabcut

@@ -35,6 +35,7 @@ typedef struct Pixie_Image
 } Pixie_Image;
 
 Pixie_Image pixie_image_new(size_t width, size_t height);
+Pixie_Image pixie_image_copy(Pixie_Image *image);
 Pixie_Image pixie_subimage_new(Pixie_Image *image, Pixie_Rect region);
 void pixie_image_free(Pixie_Image *image);
 void pixie_image_fill(Pixie_Image *image, uint32_t color);
