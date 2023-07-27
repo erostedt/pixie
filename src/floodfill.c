@@ -50,10 +50,11 @@ void pixie_point_list_resize(Pixie_Point_List *list, size_t new_cap)
 
 void pixie_point_list_append(Pixie_Point_List *list, Pixie_Point elem)
 {
-   while (list->size >= list->capacity)
-   {
+    while (list->size >= list->capacity)
+    {
+        assert(PIXIE_LIST_GROWTH_FACTOR >= 1.0);
         pixie_point_list_resize(list, (size_t)((list->capacity + 1) * PIXIE_LIST_GROWTH_FACTOR));
-   }
+    }
 
    list->points[list->size++] = elem;
 }
@@ -65,25 +66,28 @@ Pixie_Point pixie_point_list_pop_unsafe(Pixie_Point_List *list)
 }
 
 
-void pixie_floodfill(Pixie_Image *image, Pixie_Point seed, uint32_t fill_value)
+void pixie_floodfill(Pixie_RGB_Image *image, Pixie_Point seed, rgb24 fill_color)
 {
     assert((seed.x < image->width) && (seed.y < image->height));
-    uint32_t *pixels = image->pixels;
+    rgb24 *pixels = image->pixels;
     size_t stride = image->stride;
-    uint32_t original_value = PIXEL_AT(pixels, seed.x, seed.y, stride);
-    if (fill_value == original_value) return;
+    rgb24 original_color = PIXEL_AT(pixels, seed.x, seed.y, stride);
+    if (rgb_equals(fill_color, original_color)) return;
 
-    Pixie_Point_List stack = pixie_point_list_new(20);
+    size_t list_cap = image->width * image->height / 16;
+    if (list_cap == 0) list_cap = 10;
+
+    Pixie_Point_List stack = pixie_point_list_new(list_cap);
     pixie_point_list_append(&stack, seed);
 
     while (stack.size > 0)
     {
         Pixie_Point pt = pixie_point_list_pop_unsafe(&stack);
-        uint32_t pixel = PIXEL_AT(pixels, pt.x, pt.y, stride);
-        if (pixel != original_value)
+        rgb24 pixel = PIXEL_AT(pixels, pt.x, pt.y, stride);
+        if (!rgb_equals(pixel, original_color))
             continue;
 
-        PIXEL_AT(pixels, pt.x, pt.y, stride) = fill_value;            
+        PIXEL_AT(pixels, pt.x, pt.y, stride) = fill_color;            
 
         if (pt.x > 0)
             pixie_point_list_append(&stack, (Pixie_Point){.x=pt.x-1, .y=pt.y});

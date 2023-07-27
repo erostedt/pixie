@@ -2,14 +2,14 @@
 #include "assert.h"
 #include "math.h"
 
-void pixie_resize_bilinear(Pixie_Image *image, size_t target_width, size_t target_height)
+void pixie_resize_bilinear(Pixie_RGB_Image *image, size_t target_width, size_t target_height)
 {
-    uint32_t *new_pixels = (uint32_t*)malloc(target_height * target_width * sizeof(uint32_t));
+    rgb24 *new_pixels = (rgb24*)malloc(target_height * target_width * sizeof(rgb24));
     assert(new_pixels != NULL);
 
     size_t new_stride = target_width;
 
-    uint32_t *pixels = image->pixels;
+    rgb24 *pixels = image->pixels;
     size_t stride = image->stride;
 
     float xratio = (target_width > 1) ? ((float)image->width - 1) / (target_width - 1) : 0.0;
@@ -34,40 +34,33 @@ void pixie_resize_bilinear(Pixie_Image *image, size_t target_width, size_t targe
             size_t xlow = xl;
             size_t xhigh = ceilf(x);
 
-            uint32_t a = PIXEL_AT(pixels, xlow, ylow, stride);
-            uint32_t b = PIXEL_AT(pixels, xhigh, ylow, stride);
-            uint32_t c = PIXEL_AT(pixels, xlow, yhigh, stride);
-            uint32_t d = PIXEL_AT(pixels, xhigh, yhigh, stride);
+            rgb24 a = PIXEL_AT(pixels, xlow, ylow, stride);
+            rgb24 b = PIXEL_AT(pixels, xhigh, ylow, stride);
+            rgb24 c = PIXEL_AT(pixels, xlow, yhigh, stride);
+            rgb24 d = PIXEL_AT(pixels, xhigh, yhigh, stride);
 
             uint8_t red = fminf(255.0f, 
-                RED(a) * one_minus_xw * one_minus_yw + 
-                RED(b) * xw * one_minus_yw + 
-                RED(c) * yw * one_minus_xw + 
-                RED(d) * xw * yw
+                a.r * one_minus_xw * one_minus_yw + 
+                b.r * xw * one_minus_yw + 
+                c.r * yw * one_minus_xw + 
+                d.r * xw * yw
             );
 
             uint8_t green = fminf(255.0f, 
-                GREEN(a) * one_minus_xw * one_minus_yw + 
-                GREEN(b) * xw * one_minus_yw + 
-                GREEN(c) * yw * one_minus_xw + 
-                GREEN(d) * xw * yw
+                a.g * one_minus_xw * one_minus_yw + 
+                b.g * xw * one_minus_yw + 
+                c.g * yw * one_minus_xw + 
+                d.g * xw * yw
             );
 
             uint8_t blue = fminf(255.0f, 
-                BLUE(a) * one_minus_xw * one_minus_yw + 
-                BLUE(b) * xw * one_minus_yw + 
-                BLUE(c) * yw * one_minus_xw + 
-                BLUE(d) * xw * yw
+                a.b * one_minus_xw * one_minus_yw + 
+                b.b * xw * one_minus_yw + 
+                c.b * yw * one_minus_xw + 
+                d.b * xw * yw
             );
  
-            uint8_t alpha = fminf(255.0f, 
-                ALPHA(a) * one_minus_xw * one_minus_yw + 
-                ALPHA(b) * xw * one_minus_yw + 
-                ALPHA(c) * yw * one_minus_xw + 
-                ALPHA(d) * xw * yw
-            );    
-            
-            PIXEL_AT(new_pixels, j, i, new_stride) = COLOR(red, green, blue, alpha);
+            PIXEL_AT(new_pixels, j, i, new_stride) = (rgb24){.r=red, .g=green, .b=blue};
         }
     }
 
@@ -79,14 +72,14 @@ void pixie_resize_bilinear(Pixie_Image *image, size_t target_width, size_t targe
 }
 
 
-void pixie_resize_nearest_neighbor(Pixie_Image *image, size_t target_width, size_t target_height)
+void pixie_resize_nearest_neighbor(Pixie_RGB_Image *image, size_t target_width, size_t target_height)
 {
-    uint32_t *new_pixels = (uint32_t*)malloc(target_height * target_width * sizeof(uint32_t));
+    rgb24 *new_pixels = (rgb24*)malloc(target_height * target_width * sizeof(rgb24));
     assert(new_pixels != NULL);
 
     size_t new_stride = target_width;
 
-    uint32_t *pixels = image->pixels;
+    rgb24 *pixels = image->pixels;
     size_t stride = image->stride;
 
     float xratio = (target_width > 1) ? ((float)image->width - 1) / (target_width - 1) : 0.0;

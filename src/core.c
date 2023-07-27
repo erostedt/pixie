@@ -6,29 +6,23 @@
 #include "memory.h"
 
 
-Pixie_Rect pixie_rect_new(Pixie_Point top_left, size_t width, size_t height)
+Pixie_RGB_Image pixie_rgb_image_new(size_t width, size_t height)
 {
-    return (Pixie_Rect){.top_left=top_left, .width=width, .height=height};
-}
-
-
-Pixie_Image pixie_image_new(size_t width, size_t height)
-{
-    uint32_t *pixels = calloc(width * height, sizeof(uint32_t));
+    rgb24 *pixels = calloc(width * height, sizeof(rgb24));
     assert(pixels != NULL);
-    return (Pixie_Image){ .width=width, .height=height, .stride=width, .pixels=pixels };
+    return (Pixie_RGB_Image){ .width=width, .height=height, .stride=width, .pixels=pixels };
 }
 
 
-Pixie_Image pixie_subimage_new(Pixie_Image *image, Pixie_Rect region)
+Pixie_RGB_Image pixie_rgb_subimage_new(Pixie_RGB_Image *image, Pixie_Rect region)
 {
     assert(((region.top_left.x + region.width) < image->width) && ((region.top_left.y + region.height) < image->height));
-    uint32_t *data = image->pixels + (region.top_left.y * image->stride + region.top_left.x);
-    return (Pixie_Image) { .width=region.width, .height=region.height, .stride=image->stride, .pixels=data };
+    rgb24 *data = image->pixels + (region.top_left.y * image->stride + region.top_left.x);
+    return (Pixie_RGB_Image){ .width=region.width, .height=region.height, .stride=image->stride, .pixels=data };
 }
 
 
-void pixie_image_free(Pixie_Image *image)
+void pixie_rgb_image_free(Pixie_RGB_Image *image)
 {
     image->height = image->stride = image->width = 0;
     free(image->pixels);
@@ -36,9 +30,9 @@ void pixie_image_free(Pixie_Image *image)
 }
 
 
-void pixie_image_fill(Pixie_Image *image, uint32_t color)
+void pixie_rgb_image_fill(Pixie_RGB_Image *image, rgb24 color)
 {
-    uint32_t *pixels = image->pixels;
+    rgb24 *pixels = image->pixels;
     size_t width = image->width;
     size_t height = image->height;
     size_t stride = image->stride;
@@ -49,17 +43,22 @@ void pixie_image_fill(Pixie_Image *image, uint32_t color)
     }
 }
 
-Pixie_Image pixie_image_copy(Pixie_Image *image)
+Pixie_RGB_Image pixie_rgb_image_copy(Pixie_RGB_Image *image)
 {
-    uint32_t *pixels = (uint32_t*)malloc(image->width * image->height * sizeof(uint32_t));
+    rgb24 *pixels = (rgb24*)malloc(image->width * image->height * sizeof(rgb24));
     assert(pixels != NULL);
-    memcpy(pixels, image->pixels, image->height * image->width * sizeof(uint32_t));
-    return (Pixie_Image) {.width=image->width, .height=image->height, .stride=image->stride, .pixels=pixels};
+    memcpy(pixels, image->pixels, image->height * image->width * sizeof(rgb24));
+    return (Pixie_RGB_Image){.width=image->width, .height=image->height, .stride=image->stride, .pixels=pixels};
 
 }
 
+rgb24 RGB(uint8_t red, uint8_t green, uint8_t blue)
+{
+    return (rgb24){.r=red, .g=green, .b=blue};
+}
 
-void pixie_image_save_as_ppm(Pixie_Image *image, const char *file_path)
+
+void pixie_rgb_image_save_as_ppm(Pixie_RGB_Image *image, const char *file_path)
 {
     FILE *f = fopen(file_path, "wb");
     if (f == NULL) 
@@ -71,7 +70,7 @@ void pixie_image_save_as_ppm(Pixie_Image *image, const char *file_path)
     size_t width = image->width;
     size_t height = image->height;
     
-    uint32_t *pixels = image->pixels;
+    rgb24 *pixels = image->pixels;
 
 
     fprintf(f, "P6\n%zu %zu 255\n", width, height);
@@ -80,8 +79,8 @@ void pixie_image_save_as_ppm(Pixie_Image *image, const char *file_path)
     {
         for (size_t x = 0; x < width; ++x) 
         {
-            uint32_t pixel = PIXEL_AT(pixels, x, y, stride);
-            uint8_t buf[3] = {(uint8_t)RED(pixel), (uint8_t)GREEN(pixel), (uint8_t)BLUE(pixel)};
+            rgb24 pixel = PIXEL_AT(pixels, x, y, stride);
+            uint8_t buf[3] = {pixel.r, pixel.g, pixel.b};
             
             fwrite(buf, sizeof(buf), 1, f);
         }
