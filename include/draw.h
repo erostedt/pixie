@@ -1,13 +1,14 @@
 #ifndef _PIXIE_DRAW_H
 #define _PIXIE_DRAW_H
 #include "core.h"
+#include "rgb.h"
 
 
 void pixie_draw_filled_rectangle(Pixie_RGB_Image *image, Pixie_Rect rect, rgb24 color);
 void pixie_draw_rectangle(Pixie_RGB_Image *image, Pixie_Rect rect, rgb24 color);
 
-void pixie_draw_filled_square(Pixie_RGB_Image *image, Pixie_Point top_left, size_t width, rgb24 color);
-void pixie_draw_square(Pixie_RGB_Image *image, Pixie_Point top_left, size_t width, rgb24 color);
+void pixie_draw_filled_square(Pixie_RGB_Image *image, size_t x, size_t y, size_t width, rgb24 color);
+void pixie_draw_square(Pixie_RGB_Image *image, size_t x, size_t y, size_t width, rgb24 color);
 
 void pixie_draw_filled_circle(Pixie_RGB_Image *image, Pixie_Point center, size_t radius, rgb24 color);
 void pixie_draw_circle(Pixie_RGB_Image *image, Pixie_Point center, size_t radius, rgb24 color);

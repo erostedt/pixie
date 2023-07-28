@@ -1,4 +1,4 @@
-#include "core.h"
+#include "rgb.h"
 #include "stdlib.h"
 #include "assert.h"
 #include "stdio.h"
@@ -16,9 +16,9 @@ Pixie_RGB_Image pixie_rgb_image_new(size_t width, size_t height)
 
 Pixie_RGB_Image pixie_rgb_subimage_new(Pixie_RGB_Image *image, Pixie_Rect region)
 {
-    assert(((region.top_left.x + region.width) < image->width) && ((region.top_left.y + region.height) < image->height));
-    rgb24 *data = image->pixels + (region.top_left.y * image->stride + region.top_left.x);
-    return (Pixie_RGB_Image){ .width=region.width, .height=region.height, .stride=image->stride, .pixels=data };
+    assert(((region.x + region.w) < image->width) && ((region.y + region.h) < image->height));
+    rgb24 *data = image->pixels + (region.y * image->stride + region.x);
+    return (Pixie_RGB_Image){ .width=region.w, .height=region.h, .stride=image->stride, .pixels=data };
 }
 
 

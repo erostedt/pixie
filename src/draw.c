@@ -5,9 +5,9 @@
 
 void pixie_draw_filled_rectangle(Pixie_RGB_Image *image, Pixie_Rect rect, rgb24 color)
 {
-    size_t rx = rect.top_left.x, ry = rect.top_left.y; 
-    size_t max_x = (image->width > (rx + rect.width)) ? rx + rect.width : image->width;
-    size_t max_y = (image->height > (ry + rect.height)) ? ry + rect.height : image->height;
+    size_t rx = rect.x, ry = rect.y; 
+    size_t max_x = (image->width > (rx + rect.w)) ? rx + rect.w : image->width;
+    size_t max_y = (image->height > (ry + rect.h)) ? ry + rect.h : image->height;
     rgb24 *pixels = image->pixels;
     size_t stride = image->stride;
 
@@ -23,9 +23,9 @@ void pixie_draw_filled_rectangle(Pixie_RGB_Image *image, Pixie_Rect rect, rgb24 
 
 void pixie_draw_rectangle(Pixie_RGB_Image *image, Pixie_Rect rect, rgb24 color)
 {       
-    size_t rx = rect.top_left.x, ry = rect.top_left.y; 
-    size_t max_x = (image->width > (rx + rect.width)) ? rx + rect.width : image->width;
-    size_t max_y = (image->height > (ry + rect.height)) ? ry + rect.height : image->height;
+    size_t rx = rect.x, ry = rect.y; 
+    size_t max_x = (image->width > (rx + rect.w)) ? rx + rect.w : image->width;
+    size_t max_y = (image->height > (ry + rect.h)) ? ry + rect.h : image->height;
     rgb24 *pixels = image->pixels;
     size_t stride = image->stride;
 
@@ -43,15 +43,15 @@ void pixie_draw_rectangle(Pixie_RGB_Image *image, Pixie_Rect rect, rgb24 color)
 }
 
 
-void pixie_draw_filled_square(Pixie_RGB_Image *image, Pixie_Point top_left, size_t width, rgb24 color)
+void pixie_draw_filled_square(Pixie_RGB_Image *image, size_t x, size_t y, size_t width, rgb24 color)
 {
-    pixie_draw_filled_rectangle(image, (Pixie_Rect){.top_left=top_left, .width=width, .height=width}, color);
+    pixie_draw_filled_rectangle(image, RECT(x, y, width, width), color);
 }
 
 
-void pixie_draw_square(Pixie_RGB_Image *image, Pixie_Point top_left, size_t width, rgb24 color)
+void pixie_draw_square(Pixie_RGB_Image *image, size_t x, size_t y, size_t width, rgb24 color)
 {
-    pixie_draw_rectangle(image, (Pixie_Rect){.top_left=top_left, .width=width, .height=width}, color);
+    pixie_draw_rectangle(image, RECT(x, y, width, width), color);
 }
 
 

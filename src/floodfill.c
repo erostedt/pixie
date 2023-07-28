@@ -2,7 +2,7 @@
 #include "assert.h"
 #include "stdio.h"
 #include "memory.h"
-#include "core.h"
+#include "rgb.h"
 
 #define PIXIE_LIST_GROWTH_FACTOR 2
 
@@ -75,7 +75,6 @@ void pixie_floodfill(Pixie_RGB_Image *image, Pixie_Point seed, rgb24 fill_color)
     if (rgb_equals(fill_color, original_color)) return;
 
     size_t list_cap = image->width * image->height / 16;
-    if (list_cap == 0) list_cap = 10;
 
     Pixie_Point_List stack = pixie_point_list_new(list_cap);
     pixie_point_list_append(&stack, seed);
