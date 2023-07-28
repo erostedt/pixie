@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "ios": "c"
+        "ios": "c",
+        "gray.h": "c",
+        "core.h": "c",
+        "color.h": "c"
     }
 }

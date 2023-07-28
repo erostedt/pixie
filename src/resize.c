@@ -2,7 +2,7 @@
 #include "assert.h"
 #include "math.h"
 
-void pixie_resize_bilinear(Pixie_RGB_Image *image, size_t target_width, size_t target_height)
+void pixie_resize_bilinear(Pixie_RGBImage *image, size_t target_width, size_t target_height)
 {
     rgb24 *new_pixels = (rgb24*)malloc(target_height * target_width * sizeof(rgb24));
     assert(new_pixels != NULL);
@@ -72,7 +72,7 @@ void pixie_resize_bilinear(Pixie_RGB_Image *image, size_t target_width, size_t t
 }
 
 
-void pixie_resize_nearest_neighbor(Pixie_RGB_Image *image, size_t target_width, size_t target_height)
+void pixie_resize_nearest_neighbor(Pixie_RGBImage *image, size_t target_width, size_t target_height)
 {
     rgb24 *new_pixels = (rgb24*)malloc(target_height * target_width * sizeof(rgb24));
     assert(new_pixels != NULL);

@@ -2,6 +2,7 @@
 #define _PIXIE_CORE_H
 #include "stdlib.h"
 
+#define PIXEL_AT(pixels, x, y, stride) ((pixels)[(y) * (stride) + (x)])
 
 typedef struct Pixie_Point
 {

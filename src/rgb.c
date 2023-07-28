@@ -6,23 +6,23 @@
 #include "memory.h"
 
 
-Pixie_RGB_Image pixie_rgb_image_new(size_t width, size_t height)
+Pixie_RGBImage pixie_rgb_image_new(size_t width, size_t height)
 {
     rgb24 *pixels = calloc(width * height, sizeof(rgb24));
     assert(pixels != NULL);
-    return (Pixie_RGB_Image){ .width=width, .height=height, .stride=width, .pixels=pixels };
+    return (Pixie_RGBImage){ .width=width, .height=height, .stride=width, .pixels=pixels };
 }
 
 
-Pixie_RGB_Image pixie_rgb_subimage_new(Pixie_RGB_Image *image, Pixie_Rect region)
+Pixie_RGBImage pixie_rgb_image_crop(Pixie_RGBImage *image, Pixie_Rect region)
 {
     assert(((region.x + region.w) < image->width) && ((region.y + region.h) < image->height));
     rgb24 *data = image->pixels + (region.y * image->stride + region.x);
-    return (Pixie_RGB_Image){ .width=region.w, .height=region.h, .stride=image->stride, .pixels=data };
+    return (Pixie_RGBImage){ .width=region.w, .height=region.h, .stride=image->stride, .pixels=data };
 }
 
 
-void pixie_rgb_image_free(Pixie_RGB_Image *image)
+void pixie_rgb_image_free(Pixie_RGBImage *image)
 {
     image->height = image->stride = image->width = 0;
     free(image->pixels);
@@ -30,7 +30,7 @@ void pixie_rgb_image_free(Pixie_RGB_Image *image)
 }
 
 
-void pixie_rgb_image_fill(Pixie_RGB_Image *image, rgb24 color)
+void pixie_rgb_image_fill(Pixie_RGBImage *image, rgb24 color)
 {
     rgb24 *pixels = image->pixels;
     size_t width = image->width;
@@ -43,22 +43,16 @@ void pixie_rgb_image_fill(Pixie_RGB_Image *image, rgb24 color)
     }
 }
 
-Pixie_RGB_Image pixie_rgb_image_copy(Pixie_RGB_Image *image)
+Pixie_RGBImage pixie_rgb_image_copy(Pixie_RGBImage *image)
 {
     rgb24 *pixels = (rgb24*)malloc(image->width * image->height * sizeof(rgb24));
     assert(pixels != NULL);
     memcpy(pixels, image->pixels, image->height * image->width * sizeof(rgb24));
-    return (Pixie_RGB_Image){.width=image->width, .height=image->height, .stride=image->stride, .pixels=pixels};
+    return (Pixie_RGBImage){.width=image->width, .height=image->height, .stride=image->stride, .pixels=pixels};
 
 }
 
-rgb24 RGB(uint8_t red, uint8_t green, uint8_t blue)
-{
-    return (rgb24){.r=red, .g=green, .b=blue};
-}
-
-
-void pixie_rgb_image_save_as_ppm(Pixie_RGB_Image *image, const char *file_path)
+void pixie_rgb_image_save_as_ppm(Pixie_RGBImage *image, const char *file_path)
 {
     FILE *f = fopen(file_path, "wb");
     if (f == NULL) 

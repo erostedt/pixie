@@ -66,7 +66,7 @@ Pixie_Point pixie_point_list_pop_unsafe(Pixie_Point_List *list)
 }
 
 
-void pixie_floodfill(Pixie_RGB_Image *image, Pixie_Point seed, rgb24 fill_color)
+void pixie_floodfill(Pixie_RGBImage *image, Pixie_Point seed, rgb24 fill_color)
 {
     assert((seed.x < image->width) && (seed.y < image->height));
     rgb24 *pixels = image->pixels;

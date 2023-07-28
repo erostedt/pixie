@@ -8,7 +8,7 @@
 
 int main()
 {
-    Pixie_RGB_Image image = pixie_rgb_image_new(IMAGE_WIDTH, IMAGE_HEIGHT);
+    Pixie_RGBImage image = pixie_rgb_image_new(IMAGE_WIDTH, IMAGE_HEIGHT);
     pixie_draw_rectangle(&image, RECT(50, 50, 120, 120), RGB(255, 0, 0));
     pixie_draw_filled_circle(&image, POINT(50, 70), 40, RGB(0, 255, 0));
     
@@ -23,7 +23,7 @@ int main()
     pixie_draw_thick_line(&image, POINT(40, 100), POINT(150, 300), 5, RGB(255, 0, 0));
     pixie_rgb_image_save_as_ppm(&image, "image.ppm");
 
-    Pixie_RGB_Image copy = pixie_rgb_image_copy(&image);
+    Pixie_RGBImage copy = pixie_rgb_image_copy(&image);
     pixie_resize_bilinear(&copy, (size_t)(IMAGE_WIDTH * 1.5), (size_t)(IMAGE_HEIGHT * 1.5));
     pixie_resize_nearest_neighbor(&image, (size_t)(IMAGE_WIDTH * 1.5), (size_t)(IMAGE_HEIGHT * 1.5));
 

@@ -3,7 +3,7 @@
 #include "math.h"
 
 
-void pixie_draw_filled_rectangle(Pixie_RGB_Image *image, Pixie_Rect rect, rgb24 color)
+void pixie_draw_filled_rectangle(Pixie_RGBImage *image, Pixie_Rect rect, rgb24 color)
 {
     size_t rx = rect.x, ry = rect.y; 
     size_t max_x = (image->width > (rx + rect.w)) ? rx + rect.w : image->width;
@@ -21,7 +21,7 @@ void pixie_draw_filled_rectangle(Pixie_RGB_Image *image, Pixie_Rect rect, rgb24 
 }
 
 
-void pixie_draw_rectangle(Pixie_RGB_Image *image, Pixie_Rect rect, rgb24 color)
+void pixie_draw_rectangle(Pixie_RGBImage *image, Pixie_Rect rect, rgb24 color)
 {       
     size_t rx = rect.x, ry = rect.y; 
     size_t max_x = (image->width > (rx + rect.w)) ? rx + rect.w : image->width;
@@ -43,19 +43,19 @@ void pixie_draw_rectangle(Pixie_RGB_Image *image, Pixie_Rect rect, rgb24 color)
 }
 
 
-void pixie_draw_filled_square(Pixie_RGB_Image *image, size_t x, size_t y, size_t width, rgb24 color)
+void pixie_draw_filled_square(Pixie_RGBImage *image, size_t x, size_t y, size_t width, rgb24 color)
 {
     pixie_draw_filled_rectangle(image, RECT(x, y, width, width), color);
 }
 
 
-void pixie_draw_square(Pixie_RGB_Image *image, size_t x, size_t y, size_t width, rgb24 color)
+void pixie_draw_square(Pixie_RGBImage *image, size_t x, size_t y, size_t width, rgb24 color)
 {
     pixie_draw_rectangle(image, RECT(x, y, width, width), color);
 }
 
 
-void pixie_draw_filled_circle(Pixie_RGB_Image *image, Pixie_Point center, size_t radius, rgb24 color)
+void pixie_draw_filled_circle(Pixie_RGBImage *image, Pixie_Point center, size_t radius, rgb24 color)
 {
     int x = 0, y = radius;
     int xc = center.x, yc = center.y;
@@ -87,7 +87,7 @@ void pixie_draw_filled_circle(Pixie_RGB_Image *image, Pixie_Point center, size_t
 }
 
 
-void pixie_draw_circle(Pixie_RGB_Image *image, Pixie_Point center, size_t radius, rgb24 color)
+void pixie_draw_circle(Pixie_RGBImage *image, Pixie_Point center, size_t radius, rgb24 color)
 {
     size_t cx = center.x, cy = center.y;
     assert(((cx + radius) < image->width) && ((cy + radius) < image->height));
@@ -127,7 +127,7 @@ void pixie_draw_circle(Pixie_RGB_Image *image, Pixie_Point center, size_t radius
 }
 
 
-void pixie_draw_ellipse(Pixie_RGB_Image *image, Pixie_Point center, size_t a, size_t b, rgb24 color)
+void pixie_draw_ellipse(Pixie_RGBImage *image, Pixie_Point center, size_t a, size_t b, rgb24 color)
 {
     size_t cx = center.x, cy = center.y;
     assert(((cx + a) < image->width) && ((cy + b) < image->height));
@@ -193,7 +193,7 @@ void pixie_draw_ellipse(Pixie_RGB_Image *image, Pixie_Point center, size_t a, si
 }
 
 
-void pixie_draw_filled_ellipse(Pixie_RGB_Image *image, Pixie_Point center, size_t a, size_t b, rgb24 color)
+void pixie_draw_filled_ellipse(Pixie_RGBImage *image, Pixie_Point center, size_t a, size_t b, rgb24 color)
 {
     size_t cx = center.x, cy = center.y;
     assert(((cx + a) < image->width) && ((cy + b) < image->height));
@@ -256,7 +256,7 @@ void pixie_draw_filled_ellipse(Pixie_RGB_Image *image, Pixie_Point center, size_
     }
 }
 
-void _draw_bottom_flat_triangle(Pixie_RGB_Image *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, rgb24 color)
+void _draw_bottom_flat_triangle(Pixie_RGBImage *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, rgb24 color)
 {
     float invslope1 = ((float)p2.x - (float)p1.x) / ((float)p2.y - (float)p1.y);
     float invslope2 = ((float)p3.x - (float)p1.x) / ((float)p3.y - (float)p1.y);
@@ -272,7 +272,7 @@ void _draw_bottom_flat_triangle(Pixie_RGB_Image *image, Pixie_Point p1, Pixie_Po
     }
 }
 
-void _draw_top_flat_triangle(Pixie_RGB_Image *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, rgb24 color)
+void _draw_top_flat_triangle(Pixie_RGBImage *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, rgb24 color)
 {
     float invslope1 = ((float)p3.x - (float)p1.x) / ((float)p3.y - (float)p1.y);
     float invslope2 = ((float)p3.x - (float)p2.x) / ((float)p3.y - (float)p2.y);
@@ -289,14 +289,14 @@ void _draw_top_flat_triangle(Pixie_RGB_Image *image, Pixie_Point p1, Pixie_Point
 }
 
 
-void pixie_draw_triangle(Pixie_RGB_Image *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, rgb24 color)
+void pixie_draw_triangle(Pixie_RGBImage *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, rgb24 color)
 {
     pixie_draw_line(image, p1, p2, color);
     pixie_draw_line(image, p1, p3, color);
     pixie_draw_line(image, p2, p3, color);
 }
 
-void pixie_draw_filled_triangle(Pixie_RGB_Image *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, rgb24 color)
+void pixie_draw_filled_triangle(Pixie_RGBImage *image, Pixie_Point p1, Pixie_Point p2, Pixie_Point p3, rgb24 color)
 {
     // http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
     if (p1.y > p2.y) swap_points(&p1, &p2);
@@ -326,7 +326,7 @@ void pixie_draw_filled_triangle(Pixie_RGB_Image *image, Pixie_Point p1, Pixie_Po
 }
 
 
-void _draw_line_low(Pixie_RGB_Image *image, int x1, int y1, int x2, int y2, rgb24 color)
+void _draw_line_low(Pixie_RGBImage *image, int x1, int y1, int x2, int y2, rgb24 color)
 {
     int dx = x2 - x1;
     int dy = y2 - y1;
@@ -360,7 +360,7 @@ void _draw_line_low(Pixie_RGB_Image *image, int x1, int y1, int x2, int y2, rgb2
     }
 }
 
-void _draw_line_high(Pixie_RGB_Image *image, int x1, int y1, int x2, int y2, rgb24 color)
+void _draw_line_high(Pixie_RGBImage *image, int x1, int y1, int x2, int y2, rgb24 color)
 {
     int dx = x2 - x1;
     int dy = y2 - y1;
@@ -394,7 +394,7 @@ void _draw_line_high(Pixie_RGB_Image *image, int x1, int y1, int x2, int y2, rgb
     }
 }
 
-void pixie_draw_line(Pixie_RGB_Image *image, Pixie_Point p1, Pixie_Point p2, rgb24 color)
+void pixie_draw_line(Pixie_RGBImage *image, Pixie_Point p1, Pixie_Point p2, rgb24 color)
 {
     // Bresenham
     int ix1 = p1.x, ix2 = p2.x;
@@ -418,7 +418,7 @@ void pixie_draw_line(Pixie_RGB_Image *image, Pixie_Point p1, Pixie_Point p2, rgb
     }
 }
 
-void pixie_draw_thick_line(Pixie_RGB_Image *image, Pixie_Point p1, Pixie_Point p2, size_t thickness, rgb24 color)
+void pixie_draw_thick_line(Pixie_RGBImage *image, Pixie_Point p1, Pixie_Point p2, size_t thickness, rgb24 color)
 {
     if (thickness == 0) return;
     if (thickness == 1) 
@@ -464,7 +464,7 @@ void pixie_draw_thick_line(Pixie_RGB_Image *image, Pixie_Point p1, Pixie_Point p
 }
 
 
-void pixie_draw_vline(Pixie_RGB_Image *image, size_t x, size_t ymin, size_t ymax, rgb24 color)
+void pixie_draw_vline(Pixie_RGBImage *image, size_t x, size_t ymin, size_t ymax, rgb24 color)
 {
     assert(ymin <= ymax);
     size_t max_y = (ymax >= image->height) ? image->height : ymax;
@@ -476,7 +476,7 @@ void pixie_draw_vline(Pixie_RGB_Image *image, size_t x, size_t ymin, size_t ymax
 }
 
 
-void pixie_draw_hline(Pixie_RGB_Image *image, size_t y, size_t xmin, size_t xmax, rgb24 color)
+void pixie_draw_hline(Pixie_RGBImage *image, size_t y, size_t xmin, size_t xmax, rgb24 color)
 {
     assert(xmin <= xmax);
     size_t max_x = (xmax >= image->width) ? image->width : xmax;
@@ -488,7 +488,7 @@ void pixie_draw_hline(Pixie_RGB_Image *image, size_t y, size_t xmin, size_t xmax
 }
 
 
-void pixie_draw_thick_vline(Pixie_RGB_Image *image, size_t x , size_t ymin, size_t ymax, size_t thickness, rgb24 color)
+void pixie_draw_thick_vline(Pixie_RGBImage *image, size_t x , size_t ymin, size_t ymax, size_t thickness, rgb24 color)
 {
     // fix so that n and n+1 is not the same.
     assert(x < image->width);
