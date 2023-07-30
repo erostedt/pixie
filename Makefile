@@ -1,7 +1,7 @@
 CC = clang
 CFLAGS = -Wall
 EXE = out/pixie
-CFILES = main.c src/draw.c src/floodfill.c src/resize.c src/rgb.c
+CFILES = main.c src/core.c src/draw.c src/floodfill.c src/resize.c
 INCLUDE = include
 
 build:

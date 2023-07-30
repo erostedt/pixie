@@ -8,27 +8,28 @@
 
 int main()
 {
-    Pixie_RGBImage image = pixie_rgb_image_new(IMAGE_WIDTH, IMAGE_HEIGHT);
-    pixie_draw_rectangle(&image, RECT(50, 50, 120, 120), RGB(255, 0, 0));
-    pixie_draw_filled_circle(&image, POINT(50, 70), 40, RGB(0, 255, 0));
-    
-    pixie_draw_ellipse(&image, POINT(200, 200), 50, 80, RGB(0, 0, 255));
-    pixie_draw_filled_ellipse(&image, POINT(150, 150), 100, 60, RGB(0, 0, 255));
+    Pixie_Canvas canvas = pixie_canvas_new(IMAGE_WIDTH, IMAGE_HEIGHT);
+    //pixie_draw_rectangle(&canvas, RECT(50, 50, 120, 120), PIXIE_RGBA(255, 0, 0, 255), 1);
+    pixie_draw_triangle(&canvas, POINT(100, 100), POINT(200, 200), POINT(100, 200), PIXIE_RGBA(255, 0, 0, 255), 7);
+    //pixie_draw_circle(&canvas, POINT(50, 70), 40, PIXIE_RGBA(0, 255, 0, 255), 3);
+    /*
+    pixie_draw_ellipse(&canvas, POINT(200, 200), 50, 80, PIXIE_RGBA(0, 0, 255, 255));
+    pixie_draw_filled_ellipse(&canvas, POINT(150, 150), 100, 60, PIXIE_RGBA(0, 0, 255, 255));
 
-    pixie_draw_triangle(&image, POINT(100, 100), POINT(200, 200), POINT(100, 200), RGB(255, 0, 0));
 
-    pixie_floodfill(&image, POINT(102, 116), RGB(255, 0, 0));
+    pixie_floodfill(&canvas, POINT(102, 116), PIXIE_RGBA(255, 0, 0, 255));
 
-    pixie_draw_line(&image, POINT(25, 100), POINT(100, 300), RGB(255, 0, 0));
-    pixie_draw_thick_line(&image, POINT(40, 100), POINT(150, 300), 5, RGB(255, 0, 0));
-    pixie_rgb_image_save_as_ppm(&image, "image.ppm");
-
-    Pixie_RGBImage copy = pixie_rgb_image_copy(&image);
+    pixie_draw_line(&canvas, POINT(25, 100), POINT(100, 300), PIXIE_RGBA(255, 0, 0, 255));
+    pixie_draw_thick_line(&canvas, POINT(40, 100), POINT(150, 300), 5, PIXIE_RGBA(255, 0, 0, 255));
+    */
+    pixie_canvas_save_as_ppm(&canvas, "image.ppm");
+    /*
+    Pixie_Canvas copy = pixie_canvas_copy(&canvas);
     pixie_resize_bilinear(&copy, (size_t)(IMAGE_WIDTH * 1.5), (size_t)(IMAGE_HEIGHT * 1.5));
-    pixie_resize_nearest_neighbor(&image, (size_t)(IMAGE_WIDTH * 1.5), (size_t)(IMAGE_HEIGHT * 1.5));
+    pixie_resize_nearest_neighbor(&canvas, (size_t)(IMAGE_WIDTH * 1.5), (size_t)(IMAGE_HEIGHT * 1.5));
 
-    pixie_rgb_image_save_as_ppm(&copy, "image_bl.ppm");
-    pixie_rgb_image_save_as_ppm(&image, "image_nn.ppm");
-    
+    pixie_canvas_save_as_ppm(&copy, "image_bl.ppm");
+    pixie_canvas_save_as_ppm(&canvas, "image_nn.ppm");
+    */    
     return 0;
 }

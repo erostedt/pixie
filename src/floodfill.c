@@ -2,7 +2,7 @@
 #include "assert.h"
 #include "stdio.h"
 #include "memory.h"
-#include "rgb.h"
+#include "core.h"
 
 #define PIXIE_LIST_GROWTH_FACTOR 2
 
@@ -66,15 +66,15 @@ Pixie_Point pixie_point_list_pop_unsafe(Pixie_Point_List *list)
 }
 
 
-void pixie_floodfill(Pixie_RGBImage *image, Pixie_Point seed, rgb24 fill_color)
+void pixie_floodfill(Pixie_Canvas *canvas, Pixie_Point seed, uint32_t fill_color)
 {
-    assert((seed.x < image->width) && (seed.y < image->height));
-    rgb24 *pixels = image->pixels;
-    size_t stride = image->stride;
-    rgb24 original_color = PIXEL_AT(pixels, seed.x, seed.y, stride);
-    if (rgb_equals(fill_color, original_color)) return;
+    assert((seed.x < canvas->width) && (seed.y < canvas->height));
+    uint32_t *pixels = canvas->pixels;
+    size_t stride = canvas->stride;
+    uint32_t original_color = pixels[seed.y * stride + seed.x];
+    if (fill_color == original_color) return;
 
-    size_t list_cap = image->width * image->height / 16;
+    size_t list_cap = canvas->width * canvas->height / 16;
 
     Pixie_Point_List stack = pixie_point_list_new(list_cap);
     pixie_point_list_append(&stack, seed);
@@ -82,22 +82,22 @@ void pixie_floodfill(Pixie_RGBImage *image, Pixie_Point seed, rgb24 fill_color)
     while (stack.size > 0)
     {
         Pixie_Point pt = pixie_point_list_pop_unsafe(&stack);
-        rgb24 pixel = PIXEL_AT(pixels, pt.x, pt.y, stride);
-        if (!rgb_equals(pixel, original_color))
+        uint32_t pixel = pixels[pt.y * stride + pt.x];
+        if (pixel != original_color)
             continue;
 
-        PIXEL_AT(pixels, pt.x, pt.y, stride) = fill_color;            
+        pixels[pt.y * stride + pt.x] = fill_color;            
 
         if (pt.x > 0)
             pixie_point_list_append(&stack, (Pixie_Point){.x=pt.x-1, .y=pt.y});
         
-        if (pt.x + 1 < image->width)
+        if (pt.x + 1 < canvas->width)
             pixie_point_list_append(&stack, (Pixie_Point){.x=pt.x+1, .y=pt.y});
         
         if (pt.y > 0)
             pixie_point_list_append(&stack, (Pixie_Point){.x=pt.x, .y=pt.y-1});
         
-        if (pt.y + 1 < image->height)
+        if (pt.y + 1 < canvas->height)
             pixie_point_list_append(&stack, (Pixie_Point){.x=pt.x, .y=pt.y+1});
     }
 
