@@ -182,11 +182,13 @@ void pixie_draw_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t color,
     if (thickness == 0) _pixie_draw_filled_rectangle(canvas, rect, color);
     else 
     {
-        assert((thickness % 2) == 1);
-        int delta = thickness / 2;
+        int delta_minus = thickness / 2;
+        int delta_plus = thickness - delta_minus;
+
+
         int rx1 = rect.x, rx2 = rect.x + rect.w; 
         int ry1 = rect.y, ry2 = rect.y + rect.h;
-        for (int d = -delta; d <= delta; d++)
+        for (int d = -delta_minus; d <= delta_plus; d++)
         {
             int x1 = rx1 + d, x2 = rx2 - d;
             int y1 = ry1 + d, y2 = ry2 - d;
@@ -293,11 +295,10 @@ void _pixie_draw_hollow_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t 
 
 void _pixie_draw_thick_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t radius, uint32_t color, size_t thickness)
 {
-    assert((thickness % 2) == 1);
-
-    size_t delta = thickness/2;
-    int inner = (delta > radius) ? 0 : radius-delta;
-    int xo = radius + delta;
+    size_t delta_minus = thickness/2;
+    size_t delta_plus = thickness - delta_minus;
+    int inner = (delta_minus > radius) ? 0 : radius-delta_minus;
+    int xo = radius + delta_plus;
     int xi = inner;
     int y = 0;
     int erro = 1 - xo;
@@ -347,13 +348,9 @@ void _pixie_draw_thick_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t r
 
 void pixie_draw_circle(Pixie_Canvas *canvas, Pixie_Point center, size_t radius, uint32_t color, size_t thickness)
 {
-    if (thickness == 0) _pixie_draw_filled_circle(canvas, center, radius, color);
+    if (thickness == 0)      _pixie_draw_filled_circle(canvas, center, radius, color);
     else if (thickness == 1) _pixie_draw_hollow_circle(canvas, center, radius, color);
-    
-    else
-    {
-        _pixie_draw_thick_circle(canvas, center, radius, color, thickness);
-    }
+    else                     _pixie_draw_thick_circle(canvas, center, radius, color, thickness);
 }
 
 
@@ -569,7 +566,6 @@ void pixie_draw_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, P
     }
     else
     {
-        assert((thickness % 2 == 1));
         pixie_draw_line(canvas, p1, p2, color, thickness);
         pixie_draw_line(canvas, p1, p3, color, thickness);
         pixie_draw_line(canvas, p2, p3, color, thickness);

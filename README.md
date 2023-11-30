@@ -1,16 +1,3 @@
-Add thickness to ellipse
+# Intention
 
-Anti aliasing line.
-Anti aliasing circle
-Anti aliasing ellipse
-Anti aliasing triangle.
-
-Rotated rect
-Rotated ellipse 
-add text
-Make thick triangle not as ugly.
-
-What to do about thickness being even?
-
-Simple pendulum
-double pendulum using own graph lib
+Just a simple project to do some basic drawing operations. Next there will be only a few more commits for this project cleaning up some stuff and making the build process simpler with a few demo cases.
