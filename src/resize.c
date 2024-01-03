@@ -1,10 +1,11 @@
 #include "resize.h"
 #include "assert.h"
+#include "core.h"
 #include "math.h"
 
 void pixie_resize_bilinear(Pixie_Canvas *canvas, size_t target_width, size_t target_height)
 {
-    uint32_t *new_pixels = (uint32_t*)malloc(target_height * target_width * sizeof(uint32_t));
+    uint32_t *new_pixels = (uint32_t *)malloc(target_height * target_width * sizeof(uint32_t));
     assert(new_pixels != NULL);
 
     size_t new_stride = target_width;
@@ -24,7 +25,6 @@ void pixie_resize_bilinear(Pixie_Canvas *canvas, size_t target_width, size_t tar
         size_t ylow = yl;
         size_t yhigh = ceilf(y);
 
-
         for (size_t j = 0; j < target_width; j++)
         {
             float x = xratio * j;
@@ -39,33 +39,20 @@ void pixie_resize_bilinear(Pixie_Canvas *canvas, size_t target_width, size_t tar
             uint32_t c = pixels[yhigh * stride + xlow];
             uint32_t d = pixels[yhigh * stride + xhigh];
 
-            uint8_t red = fminf(255.0f, 
-                PIXIE_RED(a) * one_minus_xw * one_minus_yw + 
-                PIXIE_RED(b) * xw * one_minus_yw + 
-                PIXIE_RED(c) * yw * one_minus_xw + 
-                PIXIE_RED(d) * xw * yw
-            );
+            uint8_t red = fminf(255.0f, PIXIE_RED(a) * one_minus_xw * one_minus_yw + PIXIE_RED(b) * xw * one_minus_yw +
+                                            PIXIE_RED(c) * yw * one_minus_xw + PIXIE_RED(d) * xw * yw);
 
-            uint8_t green = fminf(255.0f, 
-                PIXIE_GREEN(a) * one_minus_xw * one_minus_yw + 
-                PIXIE_GREEN(b) * xw * one_minus_yw + 
-                PIXIE_GREEN(c) * yw * one_minus_xw + 
-                PIXIE_GREEN(d) * xw * yw
-            );
+            uint8_t green =
+                fminf(255.0f, PIXIE_GREEN(a) * one_minus_xw * one_minus_yw + PIXIE_GREEN(b) * xw * one_minus_yw +
+                                  PIXIE_GREEN(c) * yw * one_minus_xw + PIXIE_GREEN(d) * xw * yw);
 
-            uint8_t blue = fminf(255.0f, 
-                PIXIE_BLUE(a) * one_minus_xw * one_minus_yw + 
-                PIXIE_BLUE(b) * xw * one_minus_yw + 
-                PIXIE_BLUE(c) * yw * one_minus_xw + 
-                PIXIE_BLUE(d) * xw * yw
-            );
-            
-            uint8_t alpha = fminf(255.0f, 
-                PIXIE_BLUE(a) * one_minus_xw * one_minus_yw + 
-                PIXIE_BLUE(b) * xw * one_minus_yw + 
-                PIXIE_BLUE(c) * yw * one_minus_xw + 
-                PIXIE_BLUE(d) * xw * yw
-            );
+            uint8_t blue =
+                fminf(255.0f, PIXIE_BLUE(a) * one_minus_xw * one_minus_yw + PIXIE_BLUE(b) * xw * one_minus_yw +
+                                  PIXIE_BLUE(c) * yw * one_minus_xw + PIXIE_BLUE(d) * xw * yw);
+
+            uint8_t alpha =
+                fminf(255.0f, PIXIE_ALPHA(a) * one_minus_xw * one_minus_yw + PIXIE_ALPHA(b) * xw * one_minus_yw +
+                                  PIXIE_ALPHA(c) * yw * one_minus_xw + PIXIE_ALPHA(d) * xw * yw);
 
             new_pixels[i * new_stride + j] = PIXIE_RGBA(red, green, blue, alpha);
         }
@@ -78,10 +65,9 @@ void pixie_resize_bilinear(Pixie_Canvas *canvas, size_t target_width, size_t tar
     canvas->height = target_height;
 }
 
-
 void pixie_resize_nearest_neighbor(Pixie_Canvas *canvas, size_t target_width, size_t target_height)
 {
-    uint32_t *new_pixels = (uint32_t*)malloc(target_height * target_width * sizeof(uint32_t));
+    uint32_t *new_pixels = (uint32_t *)malloc(target_height * target_width * sizeof(uint32_t));
     assert(new_pixels != NULL);
 
     size_t new_stride = target_width;
