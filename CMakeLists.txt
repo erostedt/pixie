@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.25)
+
+project(pixie)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(DEMOS_PATH ./demos)
+set(SRC_PATH ./src)
+set(CMAKE_C_STANDARD 17)
+
+include_directories(${PROJECT_SOURCE_DIR}/include)
+add_library(${PROJECT_NAME} ${SRC_PATH}/core.c ${SRC_PATH}/draw.c
+                            ${SRC_PATH}/floodfill.c ${SRC_PATH}/resize.c)
+target_link_libraries(${PROJECT_NAME} m)
+
+file(GLOB pixie_demos ${DEMOS_PATH}/*)
+foreach(pixie_demo ${pixie_demos})
+  get_filename_component(demo_name ${pixie_demo} NAME_WE)
+  message(${pixie_demo})
+  message(${demo_name})
+  file(GLOB sources ${pixie_demo}/*.c)
+  foreach(source ${sources})
+    message(${source})
+  endforeach()
+  add_executable(${demo_name} ${sources})
+  target_link_libraries(${demo_name} ${PROJECT_NAME})
+endforeach()
