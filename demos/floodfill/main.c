@@ -8,7 +8,6 @@
 
 int main(int argc, char **argv)
 {
-    printf("here1");
     Pixie_Canvas canvas = pixie_canvas_new(IMAGE_WIDTH, IMAGE_HEIGHT);
     uint32_t color = PIXIE_RGBA(255, 0, 0, 255);
     pixie_draw_hline(&canvas, 100, 100, 400, color, 1);
@@ -18,6 +17,5 @@ int main(int argc, char **argv)
     pixie_canvas_save_as_ppm(&canvas, "floodfill_pre.ppm");
     pixie_floodfill(&canvas, POINT(200, 200), color);
     pixie_canvas_save_as_ppm(&canvas, "floodfill_post.ppm");
-    printf("here");
     return 0;
 }
