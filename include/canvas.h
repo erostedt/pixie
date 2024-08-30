@@ -53,7 +53,7 @@ static void pixie_canvas_fill(Pixie_Canvas *canvas, rgba32 color)
 
 static Pixie_Canvas pixie_canvas_copy(Pixie_Canvas *canvas)
 {
-    rgba32 *pixels = (rgba32 *)malloc(canvas->width * canvas->height * sizeof(rgba32));
+    rgba32 *pixels = malloc(canvas->width * canvas->height * sizeof(rgba32));
     assert(pixels != NULL);
     memcpy(pixels, canvas->pixels, canvas->height * canvas->width * sizeof(rgba32));
     return (Pixie_Canvas){.width = canvas->width, .height = canvas->height, .stride = canvas->stride, .pixels = pixels};
@@ -71,7 +71,7 @@ static void pixie_canvas_save_as_ppm(Pixie_Canvas *canvas, const char *file_path
     size_t width = canvas->width;
     size_t height = canvas->height;
 
-    uint32_t *pixels = canvas->pixels;
+    rgba32 *pixels = canvas->pixels;
 
     fprintf(f, "P6\n%zu %zu 255\n", width, height);
 
@@ -80,7 +80,7 @@ static void pixie_canvas_save_as_ppm(Pixie_Canvas *canvas, const char *file_path
         size_t ys = y * stride;
         for (size_t x = 0; x < width; ++x)
         {
-            uint32_t pixel = pixels[ys + x];
+            rgba32 pixel = pixels[ys + x];
             uint8_t buf[3] = {PIXIE_RED(pixel), PIXIE_GREEN(pixel), PIXIE_BLUE(pixel)};
 
             fwrite(buf, sizeof(buf), 1, f);

@@ -1,4 +1,3 @@
-
 #include "draw.h"
 #include "resize.h"
 

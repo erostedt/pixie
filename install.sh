@@ -2,13 +2,13 @@
 
 # Check if CMakeLists.txt exists
 if [ ! -f "CMakeLists.txt" ]; then
-	echo "CMakeLists.txt not found. Exiting..."
-	exit 1
+    echo "CMakeLists.txt not found. Exiting..."
+    exit 1
 fi
 
 # Create a build directory if it doesn't exist
 if [ ! -d "build" ]; then
-	mkdir build
+    mkdir build
 fi
 
 # Navigate to the build directory
@@ -22,7 +22,10 @@ make
 
 # Check if make was successful
 if [ $? -eq 0 ]; then
-	echo "Build successful!"
+    echo "Build successful!"
 else
-	echo "Build failed!"
+    echo "Build failed!"
 fi
+
+rm ../compile_commands.json
+ln compile_commands.json ..

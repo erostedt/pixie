@@ -4,12 +4,12 @@
 
 void pixie_resize_bilinear(Pixie_Canvas *canvas, size_t target_width, size_t target_height)
 {
-    uint32_t *new_pixels = (uint32_t *)malloc(target_height * target_width * sizeof(uint32_t));
+    rgba32 *new_pixels = (rgba32 *)malloc(target_height * target_width * sizeof(rgba32));
     assert(new_pixels != NULL);
 
     size_t new_stride = target_width;
 
-    uint32_t *pixels = canvas->pixels;
+    rgba32 *pixels = canvas->pixels;
     size_t stride = canvas->stride;
 
     float xratio = (target_width > 1) ? ((float)canvas->width - 1) / (target_width - 1) : 0.0;
@@ -33,10 +33,10 @@ void pixie_resize_bilinear(Pixie_Canvas *canvas, size_t target_width, size_t tar
             size_t xlow = xl;
             size_t xhigh = ceilf(x);
 
-            uint32_t a = pixels[ylow * stride + xlow];
-            uint32_t b = pixels[ylow * stride + xhigh];
-            uint32_t c = pixels[yhigh * stride + xlow];
-            uint32_t d = pixels[yhigh * stride + xhigh];
+            rgba32 a = pixels[ylow * stride + xlow];
+            rgba32 b = pixels[ylow * stride + xhigh];
+            rgba32 c = pixels[yhigh * stride + xlow];
+            rgba32 d = pixels[yhigh * stride + xhigh];
 
             uint8_t red = fminf(255.0f, PIXIE_RED(a) * one_minus_xw * one_minus_yw + PIXIE_RED(b) * xw * one_minus_yw +
                                             PIXIE_RED(c) * yw * one_minus_xw + PIXIE_RED(d) * xw * yw);
@@ -66,12 +66,12 @@ void pixie_resize_bilinear(Pixie_Canvas *canvas, size_t target_width, size_t tar
 
 void pixie_resize_nearest_neighbor(Pixie_Canvas *canvas, size_t target_width, size_t target_height)
 {
-    uint32_t *new_pixels = (uint32_t *)malloc(target_height * target_width * sizeof(uint32_t));
+    rgba32 *new_pixels = malloc(target_height * target_width * sizeof(rgba32));
     assert(new_pixels != NULL);
 
     size_t new_stride = target_width;
 
-    uint32_t *pixels = canvas->pixels;
+    rgba32 *pixels = canvas->pixels;
     size_t stride = canvas->stride;
 
     float xratio = (target_width > 1) ? ((float)canvas->width - 1) / (target_width - 1) : 0.0;

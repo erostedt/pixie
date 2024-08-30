@@ -1,7 +1,6 @@
-
+#include "canvas.h"
 #include "draw.h"
 #include "floodfill.h"
-#include <stdio.h>
 
 #define IMAGE_WIDTH 640
 #define IMAGE_HEIGHT 480
@@ -9,7 +8,7 @@
 int main(int argc, char **argv)
 {
     Pixie_Canvas canvas = pixie_canvas_new(IMAGE_WIDTH, IMAGE_HEIGHT);
-    uint32_t color = PIXIE_RGBA(255, 0, 0, 255);
+    rgba32 color = PIXIE_RGBA(255, 0, 0, 255);
     pixie_draw_hline(&canvas, 100, 100, 400, color, 1);
     pixie_draw_hline(&canvas, 300, 100, 400, color, 1);
     pixie_draw_vline(&canvas, 100, 100, 300, color, 1);
