@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv)
 {
-    Pixie_Canvas canvas = pixie_canvas_new(IMAGE_WIDTH, IMAGE_HEIGHT);
+    PixieCanvas canvas = pixie_canvas_new(IMAGE_WIDTH, IMAGE_HEIGHT);
     rgba32 color = PIXIE_RGBA(255, 0, 0, 255);
     pixie_draw_hline(&canvas, 100, 100, 400, color, 1);
     pixie_draw_hline(&canvas, 300, 100, 400, color, 1);

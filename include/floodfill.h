@@ -3,7 +3,7 @@
 #include "point.h"
 #include "point_list.h"
 
-void pixie_floodfill(Pixie_Canvas *canvas, Pixie_Point seed, rgba32 fill_color)
+void pixie_floodfill(PixieCanvas *canvas, PixiePoint seed, rgba32 fill_color)
 {
     assert((seed.x < canvas->width) && (seed.y < canvas->height));
     rgba32 *pixels = canvas->pixels;
@@ -13,12 +13,12 @@ void pixie_floodfill(Pixie_Canvas *canvas, Pixie_Point seed, rgba32 fill_color)
 
     size_t list_cap = canvas->width * canvas->height / 16;
 
-    Pixie_Point_List stack = pixie_point_list_new(list_cap);
+    PixiePointList stack = pixie_point_list_new(list_cap);
     pixie_point_list_append(&stack, seed);
 
     while (stack.size > 0)
     {
-        Pixie_Point pt = pixie_point_list_pop_unsafe(&stack);
+        PixiePoint pt = pixie_point_list_pop_unsafe(&stack);
         rgba32 pixel = pixels[pt.y * stride + pt.x];
         if (pixel != original_color)
             continue;
@@ -26,16 +26,16 @@ void pixie_floodfill(Pixie_Canvas *canvas, Pixie_Point seed, rgba32 fill_color)
         pixels[pt.y * stride + pt.x] = fill_color;            
 
         if (pt.x > 0)
-            pixie_point_list_append(&stack, (Pixie_Point){.x=pt.x-1, .y=pt.y});
+            pixie_point_list_append(&stack, (PixiePoint){.x=pt.x-1, .y=pt.y});
 
         if (pt.x + 1 < canvas->width)
-            pixie_point_list_append(&stack, (Pixie_Point){.x=pt.x+1, .y=pt.y});
+            pixie_point_list_append(&stack, (PixiePoint){.x=pt.x+1, .y=pt.y});
 
         if (pt.y > 0)
-            pixie_point_list_append(&stack, (Pixie_Point){.x=pt.x, .y=pt.y-1});
+            pixie_point_list_append(&stack, (PixiePoint){.x=pt.x, .y=pt.y-1});
 
         if (pt.y + 1 < canvas->height)
-            pixie_point_list_append(&stack, (Pixie_Point){.x=pt.x, .y=pt.y+1});
+            pixie_point_list_append(&stack, (PixiePoint){.x=pt.x, .y=pt.y+1});
     }
 
     pixie_point_list_free(&stack);

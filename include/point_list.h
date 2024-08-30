@@ -8,23 +8,23 @@
 
 #define PIXIE_LIST_GROWTH_FACTOR 2
 
-typedef struct Pixie_Point_List
+typedef struct PixiePointList
 {
-    Pixie_Point *points;
+    PixiePoint *points;
     size_t size;
     size_t capacity;
-} Pixie_Point_List;
+} PixiePointList;
 
 
-static Pixie_Point_List pixie_point_list_new(size_t capacity)
+static PixiePointList pixie_point_list_new(size_t capacity)
 {
-    Pixie_Point *points = (Pixie_Point*)malloc(capacity * sizeof(Pixie_Point));
+    PixiePoint *points = (PixiePoint*)malloc(capacity * sizeof(PixiePoint));
     assert(points != NULL);
-    return (Pixie_Point_List){.points=points, .size=0, .capacity=capacity};
+    return (PixiePointList){.points=points, .size=0, .capacity=capacity};
 }
 
 
-static void pixie_point_list_free(Pixie_Point_List *list)
+static void pixie_point_list_free(PixiePointList *list)
 {
     free(list->points);
     list->capacity = 0;
@@ -34,14 +34,14 @@ static void pixie_point_list_free(Pixie_Point_List *list)
 }
 
 
-static void pixie_point_list_resize(Pixie_Point_List *list, size_t new_cap)
+static void pixie_point_list_resize(PixiePointList *list, size_t new_cap)
 {
     if (new_cap < list->size)
         printf("WARNING: Resized capacity smaller than original size, data might be lossed.");
 
-    Pixie_Point *points = (Pixie_Point*)malloc(new_cap * sizeof(Pixie_Point));
+    PixiePoint *points = (PixiePoint*)malloc(new_cap * sizeof(PixiePoint));
     size_t n = (list->size < new_cap) ? list->size : new_cap;
-    memcpy(points, list->points, n * sizeof(Pixie_Point));
+    memcpy(points, list->points, n * sizeof(PixiePoint));
     free(list->points);
     list->points = points;
     list->size = n;
@@ -49,7 +49,7 @@ static void pixie_point_list_resize(Pixie_Point_List *list, size_t new_cap)
 }
 
 
-static void pixie_point_list_append(Pixie_Point_List *list, Pixie_Point elem)
+static void pixie_point_list_append(PixiePointList *list, PixiePoint elem)
 {
     while (list->size >= list->capacity)
     {
@@ -61,7 +61,7 @@ static void pixie_point_list_append(Pixie_Point_List *list, Pixie_Point elem)
 }
 
 
-static Pixie_Point pixie_point_list_pop_unsafe(Pixie_Point_List *list)
+static PixiePoint pixie_point_list_pop_unsafe(PixiePointList *list)
 {
     return list->points[--list->size];
 }

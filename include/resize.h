@@ -2,7 +2,7 @@
 #include "canvas.h"
 #include "math.h"
 
-void pixie_resize_bilinear(Pixie_Canvas *canvas, size_t target_width, size_t target_height)
+void pixie_resize_bilinear(PixieCanvas *canvas, size_t target_width, size_t target_height)
 {
     rgba32 *new_pixels = (rgba32 *)malloc(target_height * target_width * sizeof(rgba32));
     assert(new_pixels != NULL);
@@ -64,7 +64,7 @@ void pixie_resize_bilinear(Pixie_Canvas *canvas, size_t target_width, size_t tar
     canvas->height = target_height;
 }
 
-void pixie_resize_nearest_neighbor(Pixie_Canvas *canvas, size_t target_width, size_t target_height)
+void pixie_resize_nearest_neighbor(PixieCanvas *canvas, size_t target_width, size_t target_height)
 {
     rgba32 *new_pixels = malloc(target_height * target_width * sizeof(rgba32));
     assert(new_pixels != NULL);
