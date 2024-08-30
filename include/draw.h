@@ -375,12 +375,9 @@ static void pixie_draw_hollow_triangle(PixieCanvas *canvas, PixiePoint p1, Pixie
 static void _pixie_hline(PixieCanvas *canvas, size_t y, size_t xmin, size_t xmax, rgba32 color)
 {
     size_t max_x = (xmax >= canvas->width) ? canvas->width : xmax;
-    rgba32 *pixels = canvas->pixels;
-    size_t ys = canvas->stride * y;
-
     for (size_t x = xmin; x < max_x; x++)
     {
-        pixels[ys + x] = color;
+        PIXEL_AT(canvas, x, y) = color;
     }
 }
 
