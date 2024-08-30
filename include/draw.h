@@ -1,5 +1,4 @@
-#ifndef _PIXIE_DRAW_H
-#define _PIXIE_DRAW_H
+#pragma once
 #include "core.h"
 #include "point.h"
 
@@ -14,5 +13,3 @@ void pixie_draw_hollow_triangle(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Poin
 void pixie_draw_line(Pixie_Canvas *canvas, Pixie_Point p1, Pixie_Point p2, uint32_t color, size_t thickness);
 void pixie_draw_vline(Pixie_Canvas *canvas, size_t x, size_t ymin, size_t ymax, uint32_t color, size_t thickness);
 void pixie_draw_hline(Pixie_Canvas *canvas, size_t y, size_t xmin, size_t xmax, uint32_t color, size_t thickness);
-
-#endif

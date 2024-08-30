@@ -1,5 +1,4 @@
-#ifndef _PIXIE_CORE_H
-#define _PIXIE_CORE_H
+#pragma once
 #include "stdint.h"
 #include "stdlib.h"
 
@@ -32,5 +31,3 @@ Pixie_Canvas pixie_canvas_crop(Pixie_Canvas *canvas, Pixie_Rect region);
 void pixie_canvas_free(Pixie_Canvas *canvas);
 void pixie_canvas_fill(Pixie_Canvas *canvas, uint32_t color);
 void pixie_canvas_save_as_ppm(Pixie_Canvas *canvas, const char *file_path);
-
-#endif

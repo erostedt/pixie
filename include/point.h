@@ -1,6 +1,4 @@
-#ifndef _PIXIE_POINT_H
-#define _PIXIE_POINT_H
-
+#pragma once
 #include "stdlib.h"
 
 typedef struct Pixie_Point
@@ -20,5 +18,3 @@ static inline void swap_points(Pixie_Point *p1, Pixie_Point *p2)
     *p1 = *p2;
     *p2 = temp;
 }
-
-#endif
