@@ -17,7 +17,7 @@ typedef struct PixiePointList
 
 static PixiePointList pixie_point_list_new(size_t capacity)
 {
-    PixiePoint *points = (PixiePoint *)malloc(capacity * sizeof(PixiePoint));
+    PixiePoint *points = malloc(capacity * sizeof(PixiePoint));
     assert(points != NULL);
     return (PixiePointList){.points = points, .size = 0, .capacity = capacity};
 }
@@ -36,7 +36,7 @@ static void pixie_point_list_resize(PixiePointList *list, size_t new_cap)
     if (new_cap < list->size)
         printf("WARNING: Resized capacity smaller than original size, data might be lossed.");
 
-    PixiePoint *points = (PixiePoint *)malloc(new_cap * sizeof(PixiePoint));
+    PixiePoint *points = malloc(new_cap * sizeof(PixiePoint));
     size_t n = (list->size < new_cap) ? list->size : new_cap;
     memcpy(points, list->points, n * sizeof(PixiePoint));
     free(list->points);

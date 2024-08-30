@@ -1,97 +1,75 @@
 #pragma once
 #include "canvas.h"
 #include "math.h"
+#include "rgba.h"
 
 void pixie_resize_bilinear(PixieCanvas *canvas, size_t target_width, size_t target_height)
 {
-    rgba32 *new_pixels = malloc(target_height * target_width * sizeof(rgba32));
-    assert(new_pixels != NULL);
-
-    size_t new_stride = target_width;
-
-    rgba32 *pixels = canvas->pixels;
-    size_t stride = canvas->stride;
+    PixieCanvas resized_canvas = pixie_canvas_new(target_width, target_height);
 
     float xratio = (target_width > 1) ? ((float)canvas->width - 1) / (target_width - 1) : 0.0;
     float yratio = (target_height > 1) ? ((float)canvas->height - 1) / (target_height - 1) : 0.0;
 
-    for (size_t i = 0; i < target_height; i++)
+    for (size_t r = 0; r < target_height; r++)
     {
-        float y = yratio * i;
+        float y = yratio * r;
         float yl = floorf(y);
         float yw = y - yl;
         float one_minus_yw = 1.0f - yw;
         size_t ylow = yl;
         size_t yhigh = ceilf(y);
 
-        for (size_t j = 0; j < target_width; j++)
+        for (size_t c = 0; c < target_width; c++)
         {
-            float x = xratio * j;
+            float x = xratio * c;
             float xl = floorf(x);
             float xw = x - xl;
             float one_minus_xw = 1.0f - xw;
             size_t xlow = xl;
             size_t xhigh = ceilf(x);
 
-            rgba32 a = pixels[ylow * stride + xlow];
-            rgba32 b = pixels[ylow * stride + xhigh];
-            rgba32 c = pixels[yhigh * stride + xlow];
-            rgba32 d = pixels[yhigh * stride + xhigh];
+            rgba32 tl = PIXEL_AT(canvas, xlow, ylow);
+            rgba32 tr = PIXEL_AT(canvas, xhigh, ylow);
+            rgba32 bl = PIXEL_AT(canvas, xlow, yhigh);
+            rgba32 br = PIXEL_AT(canvas, xhigh, yhigh);
 
-            uint8_t red = fminf(255.0f, PIXIE_RED(a) * one_minus_xw * one_minus_yw + PIXIE_RED(b) * xw * one_minus_yw +
-                                            PIXIE_RED(c) * yw * one_minus_xw + PIXIE_RED(d) * xw * yw);
+            float tlw = one_minus_xw * one_minus_yw;
+            float trw = xw * one_minus_yw;
+            float blw = one_minus_xw * yw;
+            float brw = xw * yw;
 
-            uint8_t green =
-                fminf(255.0f, PIXIE_GREEN(a) * one_minus_xw * one_minus_yw + PIXIE_GREEN(b) * xw * one_minus_yw +
-                                  PIXIE_GREEN(c) * yw * one_minus_xw + PIXIE_GREEN(d) * xw * yw);
+            uint8_t red =
+                fminf(255.0f, PIXIE_RED(tl) * tlw + PIXIE_RED(tr) * trw + PIXIE_RED(bl) * blw + PIXIE_RED(br) * brw);
+            uint8_t green = fminf(255.0f, PIXIE_GREEN(tl) * tlw + PIXIE_GREEN(tr) * trw + PIXIE_GREEN(bl) * blw +
+                                              PIXIE_GREEN(br) * brw);
+            uint8_t blue = fminf(255.0f, PIXIE_BLUE(tl) * tlw + PIXIE_BLUE(tr) * trw + PIXIE_BLUE(bl) * blw +
+                                             PIXIE_BLUE(br) * brw);
 
-            uint8_t blue =
-                fminf(255.0f, PIXIE_BLUE(a) * one_minus_xw * one_minus_yw + PIXIE_BLUE(b) * xw * one_minus_yw +
-                                  PIXIE_BLUE(c) * yw * one_minus_xw + PIXIE_BLUE(d) * xw * yw);
+            uint8_t alpha = fminf(255.0f, PIXIE_ALPHA(tl) * tlw + PIXIE_ALPHA(tr) * trw + PIXIE_ALPHA(bl) * blw +
+                                              PIXIE_ALPHA(br) * brw);
 
-            uint8_t alpha =
-                fminf(255.0f, PIXIE_ALPHA(a) * one_minus_xw * one_minus_yw + PIXIE_ALPHA(b) * xw * one_minus_yw +
-                                  PIXIE_ALPHA(c) * yw * one_minus_xw + PIXIE_ALPHA(d) * xw * yw);
-
-            new_pixels[i * new_stride + j] = PIXIE_RGBA(red, green, blue, alpha);
+            PIXEL_AT(&resized_canvas, c, r) = PIXIE_RGBA(red, green, blue, alpha);
         }
     }
-
-    free(canvas->pixels);
-    canvas->pixels = new_pixels;
-    canvas->stride = new_stride;
-    canvas->width = target_width;
-    canvas->height = target_height;
+    pixie_canvas_swap(canvas, &resized_canvas);
+    pixie_canvas_free(&resized_canvas);
 }
 
-void pixie_resize_nearest_neighbor(PixieCanvas *canvas, size_t target_width, size_t target_height)
+static void pixie_resize_nearest_neighbor(PixieCanvas *canvas, size_t target_width, size_t target_height)
 {
-    rgba32 *new_pixels = malloc(target_height * target_width * sizeof(rgba32));
-    assert(new_pixels != NULL);
-
-    size_t new_stride = target_width;
-
-    rgba32 *pixels = canvas->pixels;
-    size_t stride = canvas->stride;
-
+    PixieCanvas resized_canvas = pixie_canvas_new(target_width, target_height);
     float xratio = (target_width > 1) ? ((float)canvas->width - 1) / (target_width - 1) : 0.0;
     float yratio = (target_height > 1) ? ((float)canvas->height - 1) / (target_height - 1) : 0.0;
 
-    for (size_t i = 0; i < target_height; i++)
+    for (size_t r = 0; r < target_height; r++)
     {
-        size_t y = roundf(yratio * i);
-        size_t ys = y * stride;
-        size_t is = i * new_stride;
-        for (size_t j = 0; j < target_width; j++)
+        size_t y = roundf(yratio * r);
+        for (size_t c = 0; c < target_width; c++)
         {
-            size_t x = roundf(xratio * j);
-            new_pixels[is + j] = pixels[ys + x];
+            size_t x = roundf(xratio * c);
+            PIXEL_AT(&resized_canvas, c, r) = PIXEL_AT(canvas, x, y);
         }
     }
-
-    free(canvas->pixels);
-    canvas->pixels = new_pixels;
-    canvas->stride = new_stride;
-    canvas->width = target_width;
-    canvas->height = target_height;
+    pixie_canvas_swap(canvas, &resized_canvas);
+    pixie_canvas_free(&resized_canvas);
 }

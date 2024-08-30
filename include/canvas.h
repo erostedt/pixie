@@ -17,7 +17,7 @@ typedef struct PixieCanvas
 
 static PixieCanvas pixie_canvas_new(size_t width, size_t height)
 {
-    assert((width > 1) && (height > 1));
+    assert((width > 0) && (height > 0));
     rgba32 *pixels = calloc(width * height, sizeof(rgba32));
     assert(pixels != NULL);
     return (PixieCanvas){.width = width, .height = height, .stride = width, .pixels = pixels};
@@ -25,8 +25,10 @@ static PixieCanvas pixie_canvas_new(size_t width, size_t height)
 
 static PixieCanvas pixie_canvas_crop(PixieCanvas *canvas, PixieRect region)
 {
-    assert(((region.x + region.w) < canvas->width) && ((region.y + region.h) < canvas->height));
-    rgba32 *data = &PIXEL_AT(canvas, region.x, region.y);
+    size_t right = pixie_rect_right(&region);
+    size_t bottom = pixie_rect_bottom(&region);
+    assert((region.w > 0) && (right < canvas->width) && (region.h > 0) && (bottom < canvas->height));
+    rgba32 *data = &PIXEL_AT_POINT(canvas, region.top_left);
     return (PixieCanvas){.width = region.w, .height = region.h, .stride = canvas->stride, .pixels = data};
 }
 

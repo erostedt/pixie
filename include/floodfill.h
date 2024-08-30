@@ -23,7 +23,8 @@ void pixie_floodfill(PixieCanvas *canvas, PixiePoint seed, rgba32 fill_color)
         if (pixel != original_color)
             continue;
 
-        PIXEL_AT(canvas, pt.x, pt.y) = fill_color;;
+        PIXEL_AT(canvas, pt.x, pt.y) = fill_color;
+        ;
 
         if (pt.x > 0)
             pixie_point_list_append(&stack, (PixiePoint){.x = pt.x - 1, .y = pt.y});

@@ -14,6 +14,8 @@
         *right = temp;                                                                                                 \
     } while (0)
 
+#define MIN(a, b) ((a) < (b)) ? a : b
+
 static inline void pixie_blend_colors_avg(rgba32 *rgba1, rgba32 rgba2)
 {
     rgba32 r1 = PIXIE_RED(*rgba1);
@@ -133,14 +135,17 @@ void _pixie_bresenham(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, rgba32 
 
 static void pixie_draw_filled_rectangle(PixieCanvas *canvas, PixieRect rect, rgba32 color)
 {
-    size_t rx = rect.x;
-    size_t ry = rect.y;
-    size_t max_x = (canvas->width > (rx + rect.w)) ? rx + rect.w : canvas->width;
-    size_t max_y = (canvas->height > (ry + rect.h)) ? ry + rect.h : canvas->height;
+    size_t left = pixie_rect_left(&rect);
+    size_t right = pixie_rect_right(&rect);
+    size_t top = pixie_rect_top(&rect);
+    size_t bottom = pixie_rect_bottom(&rect);
 
-    for (size_t y = ry; y < max_y; y++)
+    right = MIN(right, canvas->width);
+    bottom = MIN(bottom, canvas->height);
+
+    for (size_t y = top; y < bottom; y++)
     {
-        for (size_t x = rx; x < max_x; x++)
+        for (size_t x = left; x < right; x++)
         {
             PIXEL_AT(canvas, x, y) = color;
         }
@@ -149,27 +154,27 @@ static void pixie_draw_filled_rectangle(PixieCanvas *canvas, PixieRect rect, rgb
 
 static void pixie_draw_hollow_rectangle(PixieCanvas *canvas, PixieRect rect, rgba32 color)
 {
-    size_t rx = rect.x, ry = rect.y;
-    size_t max_x = (canvas->width - 1 > (rx + rect.w)) ? rx + rect.w : canvas->width - 1;
-    size_t max_y = (canvas->height - 1 > (ry + rect.h)) ? ry + rect.h : canvas->height - 1;
-    rgba32 *pixels = canvas->pixels;
-    size_t stride = canvas->stride;
+    assert(canvas->width > 0 && canvas->height > 0);
+    size_t left = pixie_rect_left(&rect);
+    size_t right = pixie_rect_right(&rect);
+    size_t top = pixie_rect_top(&rect);
+    size_t bottom = pixie_rect_bottom(&rect);
 
-    for (size_t y = ry; y <= max_y; y++)
+    right = MIN(right, canvas->width - 1);
+    bottom = MIN(bottom, canvas->height - 1);
+
+    for (size_t y = top; y <= bottom; y++)
     {
-        size_t ys = y * stride;
-        pixels[ys + rx] = color;
-        pixels[ys + max_x] = color;
+        PIXEL_AT(canvas, left, y) = color;
+        PIXEL_AT(canvas, right, y) = color;
     }
 
-    size_t ysmin = ry * stride;
-    size_t ysmax = max_y * stride;
-    for (size_t x = rx; x <= max_x; x++)
+    for (size_t x = left; x <= right; x++)
     {
-        pixels[ysmin + x] = color;
-        pixels[ysmax + x] = color;
+        PIXEL_AT(canvas, x, top) = color;
+        PIXEL_AT(canvas, x, bottom) = color;
     }
-    pixels[ysmax + max_x] = color;
+    PIXEL_AT(canvas, right, bottom) = color;
 }
 
 static void pixie_draw_filled_ellipse(PixieCanvas *canvas, PixiePoint center, size_t a, size_t b, rgba32 color)
@@ -334,11 +339,11 @@ static void pixie_draw_filled_triangle(PixieCanvas *canvas, PixiePoint p1, Pixie
 {
     // http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
     if (p1.y > p2.y)
-        swap_points(&p1, &p2);
+        POINTER_SWAP(&p1, &p2);
     if (p1.y > p3.y)
-        swap_points(&p1, &p3);
+        POINTER_SWAP(&p1, &p3);
     if (p2.y > p3.y)
-        swap_points(&p2, &p3);
+        POINTER_SWAP(&p2, &p3);
 
     if (p2.y == p3.y)
     {
