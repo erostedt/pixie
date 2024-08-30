@@ -1,8 +1,8 @@
 #include "stdlib.h"
 #include "assert.h"
 #include "stdio.h"
-#include "memory.h"
-#include "core.h"
+#include "string.h"
+#include "floodfill.h"
 
 #define PIXIE_LIST_GROWTH_FACTOR 2
 

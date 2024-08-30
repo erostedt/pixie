@@ -10,19 +10,6 @@
 #define PIXIE_ALPHA(pixel) (((pixel) >> 0) & 0xFF)
 #define PIXIE_RGBA(r, g, b, a) (((r) << 24) | ((g) << 16) | ((b) << 8) | (a))
 
-typedef struct Pixie_Point {
-  size_t x, y;
-} Pixie_Point;
-
-static inline Pixie_Point POINT(size_t x, size_t y) {
-  return (Pixie_Point){.x = x, .y = y};
-}
-
-static inline void swap_points(Pixie_Point *p1, Pixie_Point *p2) {
-  Pixie_Point temp = *p1;
-  *p1 = *p2;
-  *p2 = temp;
-}
 
 typedef struct Pixie_Rect {
   size_t x, y, w, h;

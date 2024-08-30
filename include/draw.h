@@ -1,6 +1,7 @@
 #ifndef _PIXIE_DRAW_H
 #define _PIXIE_DRAW_H
 #include "core.h"
+#include "point.h"
 
 void pixie_draw_filled_rectangle(Pixie_Canvas *canvas, Pixie_Rect rect, uint32_t color);
 void pixie_draw_filled_ellipse(Pixie_Canvas *canvas, Pixie_Point center, size_t a, size_t b, uint32_t color);
