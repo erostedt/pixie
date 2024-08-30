@@ -7,8 +7,8 @@ set(SRC_PATH ./src)
 set(CMAKE_C_STANDARD 17)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
-add_library(${PROJECT_NAME} ${SRC_PATH}/core.c ${SRC_PATH}/draw.c
-                            ${SRC_PATH}/floodfill.c ${SRC_PATH}/resize.c)
+file(GLOB SOURCE_FILES ${SRC_PATH}/*)
+add_library(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} m)
 
 file(GLOB pixie_demos ${DEMOS_PATH}/*)

@@ -1,5 +1,6 @@
 #pragma once
-#include "core.h"
+#include "canvas.h"
 #include "point.h"
+#include "rgba.h"
 
-void pixie_floodfill(Pixie_Canvas *canvas, Pixie_Point seed, uint32_t fill_color);
+void pixie_floodfill(Pixie_Canvas *canvas, Pixie_Point seed, rgba32 fill_color);

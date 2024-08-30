@@ -1,8 +1,7 @@
 #pragma once
-#include "canvas.h"
-#include "point.h"
-#include "rect.h"
+#include "stdint.h"
 
+typedef uint32_t rgba32; 
 #define PIXEL_AT(canvas, x, y) ((canvas).pixels[(y) * ((canvas).stride) + (x)])
 #define PIXIE_RED(pixel) (((pixel) >> 24) & 0xFF)
 #define PIXIE_GREEN(pixel) (((pixel) >> 16) & 0xFF)
