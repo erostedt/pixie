@@ -2,7 +2,7 @@
 #include "stdint.h"
 
 typedef uint32_t rgba32; 
-#define PIXEL_AT(canvas, x, y) ((canvas).pixels[(y) * ((canvas).stride) + (x)])
+#define PIXEL_AT(canvas, x, y) ((canvas)->pixels[(y) * ((canvas)->stride) + (x)])
 #define PIXIE_RED(pixel) (((pixel) >> 24) & 0xFF)
 #define PIXIE_GREEN(pixel) (((pixel) >> 16) & 0xFF)
 #define PIXIE_BLUE(pixel) (((pixel) >> 8) & 0xFF)

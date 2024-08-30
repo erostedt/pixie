@@ -6,6 +6,12 @@
 #include "rect.h"
 #include "rgba.h"
 
+#define POINTER_SWAP(left, right) do { \
+    typeof(*left) temp = *left; \
+    *left = *right; \
+    *right = temp; \
+} while(0)
+
 static inline void pixie_blend_colors_avg(rgba32 *rgba1, rgba32 rgba2)
 {
     rgba32 r1 = PIXIE_RED(*rgba1);
@@ -43,8 +49,6 @@ static void _draw_line_low(PixieCanvas *canvas, int x1, int y1, int x2, int y2, 
     }
     int D = (2 * dy) - dx;
     int y = y1;
-    rgba32 *pixels = canvas->pixels;
-    int stride = canvas->stride;
     int x_max = (int)canvas->width;
     int y_max = (int)canvas->height;
 
@@ -52,7 +56,7 @@ static void _draw_line_low(PixieCanvas *canvas, int x1, int y1, int x2, int y2, 
     {
         if ((x > -1) && (x < x_max) && (y > -1) && (y < y_max))
         {
-            pixels[y * stride + x] = color;
+            PIXEL_AT(canvas, x, y) = color;
         }
 
         if (D > 0)
@@ -78,15 +82,13 @@ static void _draw_line_high(PixieCanvas *canvas, int x1, int y1, int x2, int y2,
 
     int D = (2 * dx) - dy;
     int x = x1;
-    rgba32 *pixels = canvas->pixels;
-    int stride = canvas->stride;
     int x_max = (int)canvas->width;
     int y_max = (int)canvas->height;
     for (int y = y1; y < y2; y++)
     {
         if ((x > -1) && (x < x_max) && (y > -1) && (y < y_max))
         {
-            pixels[y * stride + x] = color;
+            PIXEL_AT(canvas, x, y) = color;
         }
 
         if (D > 0)
@@ -95,22 +97,10 @@ static void _draw_line_high(PixieCanvas *canvas, int x1, int y1, int x2, int y2,
             D += (2 * (dx - dy));
         }
         else
+        {
             D += 2 * dx;
+        }
     }
-}
-
-static void _swap_ints(int *int1, int *int2)
-{
-    int temp = *int1;
-    *int1 = *int2;
-    *int2 = temp;
-}
-
-static void _swap_size_ts(size_t *s1, size_t *s2)
-{
-    size_t temp = *s1;
-    *s1 = *s2;
-    *s2 = temp;
 }
 
 void _pixie_bresenham(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, rgba32 color)
@@ -123,8 +113,8 @@ void _pixie_bresenham(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, rgba32 
     {
         if (ix2 < ix1)
         {
-            _swap_ints(&ix1, &ix2);
-            _swap_ints(&iy1, &iy2);
+            POINTER_SWAP(&ix1, &ix2);
+            POINTER_SWAP(&iy1, &iy2);
         }
         _draw_line_low(canvas, ix1, iy1, ix2, iy2, color);
     }
@@ -132,8 +122,8 @@ void _pixie_bresenham(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, rgba32 
     {
         if (iy2 < iy1)
         {
-            _swap_ints(&ix1, &ix2);
-            _swap_ints(&iy1, &iy2);
+            POINTER_SWAP(&ix1, &ix2);
+            POINTER_SWAP(&iy1, &iy2);
         }
         _draw_line_high(canvas, ix1, iy1, ix2, iy2, color);
     }
@@ -144,14 +134,13 @@ static void pixie_draw_filled_rectangle(PixieCanvas *canvas, PixieRect rect, rgb
     size_t rx = rect.x, ry = rect.y;
     size_t max_x = (canvas->width > (rx + rect.w)) ? rx + rect.w : canvas->width;
     size_t max_y = (canvas->height > (ry + rect.h)) ? ry + rect.h : canvas->height;
-    rgba32 *pixels = canvas->pixels;
-    size_t stride = canvas->stride;
 
     for (size_t y = ry; y < max_y; y++)
     {
-        size_t ys = y * stride;
         for (size_t x = rx; x < max_x; x++)
-            pixels[ys + x] = color;
+        {
+            PIXEL_AT(canvas, x, y) = color;
+        }
     }
 }
 
@@ -257,15 +246,13 @@ static void pixie_draw_hollow_ellipse(PixieCanvas *canvas, PixiePoint center, si
     float d1 = (ry * ry) - (rx * rx * ry) + (0.25 * rx * rx);
     float dx = 2 * ry * ry * x;
     float dy = 2 * rx * rx * y;
-    rgba32 *pixels = canvas->pixels;
-    size_t stride = canvas->stride;
 
     while (dx < dy)
     {
-        pixels[(yc + y) * stride + xc + x] = color;
-        pixels[(yc + y) * stride + xc - x] = color;
-        pixels[(yc - y) * stride + xc + x] = color;
-        pixels[(yc - y) * stride + xc - x] = color;
+        PIXEL_AT(canvas, xc + x, yc + y) = color;
+        PIXEL_AT(canvas, xc - x, yc + y) = color;
+        PIXEL_AT(canvas, xc + x, yc - y) = color;
+        PIXEL_AT(canvas, xc - x, yc - y) = color;
 
         if (d1 < 0)
         {
@@ -286,10 +273,10 @@ static void pixie_draw_hollow_ellipse(PixieCanvas *canvas, PixiePoint center, si
     float d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) + ((rx * rx) * ((y - 1) * (y - 1))) - (rx * rx * ry * ry);
     while (y >= 0)
     {
-        pixels[(yc + y) * stride + xc + x] = color;
-        pixels[(yc + y) * stride + xc - x] = color;
-        pixels[(yc - y) * stride + xc + x] = color;
-        pixels[(yc - y) * stride + xc - x] = color;
+        PIXEL_AT(canvas, xc + x, yc + y) = color;
+        PIXEL_AT(canvas, xc - x, yc + y) = color;
+        PIXEL_AT(canvas, xc + x, yc - y) = color;
+        PIXEL_AT(canvas, xc - x, yc - y) = color;
 
         if (d2 > 0)
         {
@@ -397,7 +384,7 @@ void pixie_draw_hline(PixieCanvas *canvas, size_t y, size_t xmin, size_t xmax, r
         return;
     assert(y < canvas->width);
     if (xmin > xmax)
-        _swap_size_ts(&xmin, &xmax);
+        POINTER_SWAP(&xmin, &xmax);
 
     assert((thickness / 2) < xmin + 1);
     assert(((thickness / 2) + xmax) < canvas->width);
@@ -430,7 +417,7 @@ static void pixie_draw_vline(PixieCanvas *canvas, size_t x, size_t ymin, size_t 
         return;
     assert(x < canvas->width);
     if (ymin > ymax)
-        _swap_size_ts(&ymin, &ymax);
+        POINTER_SWAP(&ymin, &ymax);
     assert((thickness / 2) < ymin + 1);
     assert(((thickness / 2) + ymax) < canvas->height);
 
@@ -466,7 +453,6 @@ static void pixie_draw_line(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, r
     float ady = (dy > 0) ? dy : -dy;
 
     float slope = dy / dx;
-    ;
     if (slope < 1.0)
     {
         float wy = (thickness - 1) * sqrt((dx * dx) + (dy * dy)) / (2 * adx);

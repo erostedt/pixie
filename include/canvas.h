@@ -26,7 +26,7 @@ static PixieCanvas pixie_canvas_new(size_t width, size_t height)
 static PixieCanvas pixie_canvas_crop(PixieCanvas *canvas, PixieRect region)
 {
     assert(((region.x + region.w) < canvas->width) && ((region.y + region.h) < canvas->height));
-    rgba32 *data = canvas->pixels + (region.y * canvas->stride + region.x);
+    rgba32 *data = &PIXEL_AT(canvas, region.x, region.y);
     return (PixieCanvas){.width = region.w, .height = region.h, .stride = canvas->stride, .pixels = data};
 }
 
@@ -39,15 +39,12 @@ static void pixie_canvas_free(PixieCanvas *canvas)
 
 static void pixie_canvas_fill(PixieCanvas *canvas, rgba32 color)
 {
-    rgba32 *pixels = canvas->pixels;
-    size_t width = canvas->width;
-    size_t height = canvas->height;
-    size_t stride = canvas->stride;
-    for (size_t y = 0; y < height; y++)
+    for (size_t y = 0; y < canvas->height; y++)
     {
-        size_t ys = y * stride;
-        for (size_t x = 0; x < width; x++)
-            pixels[ys + x] = color;
+        for (size_t x = 0; x < canvas->width; x++)
+        {
+            PIXEL_AT(canvas, x, y) = color;
+        }
     }
 }
 
@@ -67,23 +64,19 @@ static void pixie_canvas_save_as_ppm(PixieCanvas *canvas, const char *file_path)
         fprintf(stderr, "ERROR: could not open file %s: %m\n", file_path);
         exit(1);
     }
-    size_t stride = canvas->stride;
-    size_t width = canvas->width;
-    size_t height = canvas->height;
-
-    rgba32 *pixels = canvas->pixels;
+    const size_t width = canvas->width;
+    const size_t height = canvas->height;
 
     fprintf(f, "P6\n%zu %zu 255\n", width, height);
 
     for (size_t y = 0; y < height; ++y)
     {
-        size_t ys = y * stride;
         for (size_t x = 0; x < width; ++x)
         {
-            rgba32 pixel = pixels[ys + x];
-            uint8_t buf[3] = {PIXIE_RED(pixel), PIXIE_GREEN(pixel), PIXIE_BLUE(pixel)};
+            rgba32 pixel = PIXEL_AT(canvas, x, y);
+            uint8_t rgb[3] = {PIXIE_RED(pixel), PIXIE_GREEN(pixel), PIXIE_BLUE(pixel)};
 
-            fwrite(buf, sizeof(buf), 1, f);
+            fwrite(rgb, sizeof(rgb), 1, f);
         }
     }
 

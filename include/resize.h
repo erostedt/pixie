@@ -4,7 +4,7 @@
 
 void pixie_resize_bilinear(PixieCanvas *canvas, size_t target_width, size_t target_height)
 {
-    rgba32 *new_pixels = (rgba32 *)malloc(target_height * target_width * sizeof(rgba32));
+    rgba32 *new_pixels = malloc(target_height * target_width * sizeof(rgba32));
     assert(new_pixels != NULL);
 
     size_t new_stride = target_width;
