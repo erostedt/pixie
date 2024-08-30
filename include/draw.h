@@ -6,11 +6,13 @@
 #include "rect.h"
 #include "rgba.h"
 
-#define POINTER_SWAP(left, right) do { \
-    typeof(*left) temp = *left; \
-    *left = *right; \
-    *right = temp; \
-} while(0)
+#define POINTER_SWAP(left, right)                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        typeof(*left) temp = *left;                                                                                    \
+        *left = *right;                                                                                                \
+        *right = temp;                                                                                                 \
+    } while (0)
 
 static inline void pixie_blend_colors_avg(rgba32 *rgba1, rgba32 rgba2)
 {
@@ -131,7 +133,8 @@ void _pixie_bresenham(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, rgba32 
 
 static void pixie_draw_filled_rectangle(PixieCanvas *canvas, PixieRect rect, rgba32 color)
 {
-    size_t rx = rect.x, ry = rect.y;
+    size_t rx = rect.x;
+    size_t ry = rect.y;
     size_t max_x = (canvas->width > (rx + rect.w)) ? rx + rect.w : canvas->width;
     size_t max_y = (canvas->height > (ry + rect.h)) ? ry + rect.h : canvas->height;
 
@@ -364,7 +367,6 @@ static void pixie_draw_hollow_triangle(PixieCanvas *canvas, PixiePoint p1, Pixie
     _pixie_bresenham(canvas, p2, p3, color);
 }
 
-
 static void _pixie_hline(PixieCanvas *canvas, size_t y, size_t xmin, size_t xmax, rgba32 color)
 {
     size_t max_x = (xmax >= canvas->width) ? canvas->width : xmax;
@@ -401,12 +403,9 @@ void pixie_draw_hline(PixieCanvas *canvas, size_t y, size_t xmin, size_t xmax, r
 static void _pixie_vline(PixieCanvas *canvas, size_t x, size_t ymin, size_t ymax, rgba32 color)
 {
     size_t max_y = (ymax >= canvas->height) ? canvas->height : ymax;
-    rgba32 *pixels = canvas->pixels;
-    size_t stride = canvas->stride;
-
     for (size_t y = ymin; y < max_y; y++)
     {
-        pixels[y * stride + x] = color;
+        PIXEL_AT(canvas, x, y) = color;
     }
 }
 
@@ -429,7 +428,6 @@ static void pixie_draw_vline(PixieCanvas *canvas, size_t x, size_t ymin, size_t 
         _pixie_vline(canvas, x - dx, ymin, ymax, color);
     }
 }
-
 
 static void pixie_draw_line(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, rgba32 color, size_t thickness)
 {

@@ -56,6 +56,14 @@ static PixieCanvas pixie_canvas_copy(PixieCanvas *canvas)
     return (PixieCanvas){.width = canvas->width, .height = canvas->height, .stride = canvas->stride, .pixels = pixels};
 }
 
+static void pixie_canvas_swap(PixieCanvas *canvas1, PixieCanvas *canvas2)
+{
+    PixieCanvas temp_canvas = {0};
+    memcpy(&temp_canvas, canvas1, sizeof(PixieCanvas));
+    memcpy(canvas1, canvas2, sizeof(PixieCanvas));
+    memcpy(canvas2, &temp_canvas, sizeof(PixieCanvas));
+}
+
 static void pixie_canvas_save_as_ppm(PixieCanvas *canvas, const char *file_path)
 {
     FILE *f = fopen(file_path, "wb");
