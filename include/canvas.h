@@ -77,16 +77,17 @@ static void pixie_canvas_save_as_ppm(PixieCanvas *canvas, const char *file_path)
     const size_t width = canvas->width;
     const size_t height = canvas->height;
 
-    fprintf(f, "P3\n%zu %zu 255\n", width, height);
+    fprintf(f, "P3\n%zu %zu\n255\n", width, height);
 
     for (size_t y = 0; y < height; ++y)
     {
-        for (size_t x = 0; x < width; ++x)
+        for (size_t x = 0; x < width-1; ++x)
         {
             rgba32 pixel = PIXEL_AT(canvas, x, y);
             fprintf(f, "%d %d %d ", PIXIE_RED(pixel), PIXIE_GREEN(pixel), PIXIE_BLUE(pixel));
         }
-        fprintf(f, "\n");
+        rgba32 pixel = PIXEL_AT(canvas, width-1, y);
+        fprintf(f, "%d %d %d\n", PIXIE_RED(pixel), PIXIE_GREEN(pixel), PIXIE_BLUE(pixel));
     }
 
     fclose(f);
