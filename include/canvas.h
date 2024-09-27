@@ -1,6 +1,5 @@
 #pragma once
-#include <stdint.h>
-#include <stdlib.h>
+#include <stddef.h>
 
 #include "rect.h"
 #include "rgba.h"

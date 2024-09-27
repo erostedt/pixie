@@ -1,7 +1,7 @@
 #pragma once
+#include <stddef.h>
+
 #include "point.h"
-#include "stdint.h"
-#include "stdlib.h"
 
 typedef struct PixieRect
 {

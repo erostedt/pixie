@@ -1,8 +1,9 @@
 #include <assert.h>
-#include <canvas.h>
 #include <math.h>
 #include <point.h>
+#include <stdlib.h>
 
+#include "canvas.h"
 #include "draw.h"
 #include "rect.h"
 #include "rgba.h"
