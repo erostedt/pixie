@@ -1,5 +1,5 @@
 #pragma once
-#include "stdlib.h"
+#include <stdlib.h>
 
 typedef struct PixiePoint
 {
@@ -13,7 +13,4 @@ typedef struct PixiePointf
     float y;
 } PixiePointf;
 
-static inline PixiePoint POINT(size_t x, size_t y)
-{
-    return (PixiePoint){.x = x, .y = y};
-}
+PixiePoint POINT(size_t x, size_t y);
