@@ -32,13 +32,19 @@ void pixie_blend_colors_avg(rgba32 *rgba1, rgba32 rgba2)
 
     r1 = (r1 * (255 - a2) + r2 * a2) / 255;
     if (r1 > 255)
+    {
         r1 = 255;
+    }
     g1 = (g1 * (255 - a2) + g2 * a2) / 255;
     if (g1 > 255)
+    {
         g1 = 255;
+    }
     b1 = (b1 * (255 - a2) + b2 * a2) / 255;
     if (b1 > 255)
+    {
         b1 = 255;
+    }
 
     *rgba1 = PIXIE_RGBA(r1, g1, b1, a1);
 }
@@ -71,7 +77,9 @@ void _draw_line_low(PixieCanvas *canvas, int x1, int y1, int x2, int y2, rgba32 
             D += 2 * (dy - dx);
         }
         else
+        {
             D += 2 * dy;
+        }
     }
 }
 
@@ -341,11 +349,17 @@ void pixie_draw_filled_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p
 {
     // http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
     if (p1.y > p2.y)
+    {
         POINTER_SWAP(&p1, &p2);
+    }
     if (p1.y > p3.y)
+    {
         POINTER_SWAP(&p1, &p3);
+    }
     if (p2.y > p3.y)
+    {
         POINTER_SWAP(&p2, &p3);
+    }
 
     if (p2.y == p3.y)
     {
@@ -387,10 +401,14 @@ void pixie_draw_hline(PixieCanvas *canvas, size_t y, size_t xmin, size_t xmax, r
 {
     // fix so that n and n+1 is not the same.
     if (thickness == 0)
+    {
         return;
+    }
     assert(y < canvas->width);
     if (xmin > xmax)
+    {
         POINTER_SWAP(&xmin, &xmax);
+    }
 
     assert((thickness / 2) < xmin + 1);
     assert(((thickness / 2) + xmax) < canvas->width);
@@ -417,10 +435,14 @@ void pixie_draw_vline(PixieCanvas *canvas, size_t x, size_t ymin, size_t ymax, r
 {
     // fix so that n and n+1 is not the same.
     if (thickness == 0)
+    {
         return;
+    }
     assert(x < canvas->width);
     if (ymin > ymax)
+    {
         POINTER_SWAP(&ymin, &ymax);
+    }
     assert((thickness / 2) < ymin + 1);
     assert(((thickness / 2) + ymax) < canvas->height);
 
@@ -436,7 +458,9 @@ void pixie_draw_vline(PixieCanvas *canvas, size_t x, size_t ymin, size_t ymax, r
 void pixie_draw_line(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, rgba32 color, size_t thickness)
 {
     if (thickness == 0)
+    {
         return;
+    }
     if (thickness == 1)
     {
         _pixie_bresenham(canvas, p1, p2, color);
