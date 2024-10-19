@@ -1,6 +1,4 @@
-#include "canvas.h"
-#include "draw.h"
-#include "floodfill.h"
+#include <pixie.h>
 
 #define IMAGE_WIDTH 640
 #define IMAGE_HEIGHT 480
@@ -16,5 +14,4 @@ int main(int argc, char **argv)
     pixie_canvas_save_as_ppm(&canvas, "floodfill_pre.ppm");
     pixie_floodfill(&canvas, POINT(200, 200), color);
     pixie_canvas_save_as_ppm(&canvas, "floodfill_post.ppm");
-    return 0;
 }

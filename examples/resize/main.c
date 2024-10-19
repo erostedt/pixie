@@ -1,5 +1,4 @@
-#include "draw.h"
-#include "resize.h"
+#include <pixie.h>
 
 #define IMAGE_WIDTH 640
 #define IMAGE_HEIGHT 480
@@ -22,5 +21,4 @@ int main(int argc, char **argv)
 
     pixie_canvas_save_as_ppm(&copy, "resize_bl.ppm");
     pixie_canvas_save_as_ppm(&canvas, "resize_nn.ppm");
-    return 0;
 }

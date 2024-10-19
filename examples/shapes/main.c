@@ -1,4 +1,4 @@
-#include "draw.h"
+#include <pixie.h>
 
 #define IMAGE_WIDTH 640
 #define IMAGE_HEIGHT 480
@@ -15,5 +15,4 @@ int main(int argc, char **argv)
     pixie_draw_hollow_triangle(&canvas, POINT(300, 300), POINT(300, 200), POINT(200, 100), PIXIE_RGBA(0, 0, 255, 255));
 
     pixie_canvas_save_as_ppm(&canvas, "shapes.ppm");
-    return 0;
 }

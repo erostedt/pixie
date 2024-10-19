@@ -1,4 +1,3 @@
-#include "canvas.h"
 #include <float.h>
 #include <math.h>
 #include <stdbool.h>
@@ -7,6 +6,8 @@
 #include <pixie.h>
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof((arr)[0]))
+#define IMAGE_WIDTH 640
+#define IMAGE_HEIGHT 480
 
 typedef struct
 {
@@ -206,7 +207,7 @@ int main()
     scene.cubes = cubes;
     scene.cube_count = ARRAY_LEN(cubes);
 
-    PixieCanvas canvas = pixie_canvas_new(800, 600);
+    PixieCanvas canvas = pixie_canvas_new(IMAGE_WIDTH, IMAGE_HEIGHT);
     render(&canvas, &scene);
     pixie_canvas_save_as_ppm(&canvas, "raytrace.ppm");
 }
