@@ -18,17 +18,17 @@
 
 #define MIN(a, b) ((a) < (b)) ? a : b
 
-void pixie_blend_colors_avg(rgba32 *rgba1, rgba32 rgba2)
+void pixie_blend_colors_avg(RGBA32 *rgba1, RGBA32 rgba2)
 {
-    rgba32 r1 = PIXIE_RED(*rgba1);
-    rgba32 g1 = PIXIE_GREEN(*rgba1);
-    rgba32 b1 = PIXIE_BLUE(*rgba1);
-    rgba32 a1 = PIXIE_ALPHA(*rgba1);
+    RGBA32 r1 = PIXIE_RED(*rgba1);
+    RGBA32 g1 = PIXIE_GREEN(*rgba1);
+    RGBA32 b1 = PIXIE_BLUE(*rgba1);
+    RGBA32 a1 = PIXIE_ALPHA(*rgba1);
 
-    rgba32 r2 = PIXIE_RED(rgba2);
-    rgba32 g2 = PIXIE_GREEN(rgba2);
-    rgba32 b2 = PIXIE_BLUE(rgba2);
-    rgba32 a2 = PIXIE_ALPHA(rgba2);
+    RGBA32 r2 = PIXIE_RED(rgba2);
+    RGBA32 g2 = PIXIE_GREEN(rgba2);
+    RGBA32 b2 = PIXIE_BLUE(rgba2);
+    RGBA32 a2 = PIXIE_ALPHA(rgba2);
 
     r1 = (r1 * (255 - a2) + r2 * a2) / 255;
     if (r1 > 255)
@@ -49,7 +49,7 @@ void pixie_blend_colors_avg(rgba32 *rgba1, rgba32 rgba2)
     *rgba1 = PIXIE_RGBA(r1, g1, b1, a1);
 }
 
-void _draw_line_low(PixieCanvas *canvas, int x1, int y1, int x2, int y2, rgba32 color)
+void _draw_line_low(PixieCanvas *canvas, int x1, int y1, int x2, int y2, RGBA32 color)
 {
     int dx = x2 - x1;
     int dy = y2 - y1;
@@ -83,7 +83,7 @@ void _draw_line_low(PixieCanvas *canvas, int x1, int y1, int x2, int y2, rgba32 
     }
 }
 
-void _draw_line_high(PixieCanvas *canvas, int x1, int y1, int x2, int y2, rgba32 color)
+void _draw_line_high(PixieCanvas *canvas, int x1, int y1, int x2, int y2, RGBA32 color)
 {
     int dx = x2 - x1;
     int dy = y2 - y1;
@@ -117,7 +117,7 @@ void _draw_line_high(PixieCanvas *canvas, int x1, int y1, int x2, int y2, rgba32
     }
 }
 
-void _pixie_bresenham(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, rgba32 color)
+void _pixie_bresenham(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, RGBA32 color)
 {
     // Bresenham
     int ix1 = p1.x, ix2 = p2.x;
@@ -143,7 +143,7 @@ void _pixie_bresenham(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, rgba32 
     }
 }
 
-void pixie_draw_filled_rectangle(PixieCanvas *canvas, PixieRect rect, rgba32 color)
+void pixie_draw_filled_rectangle(PixieCanvas *canvas, PixieRect rect, RGBA32 color)
 {
     size_t left = pixie_rect_left(&rect);
     size_t right = pixie_rect_right(&rect);
@@ -162,7 +162,7 @@ void pixie_draw_filled_rectangle(PixieCanvas *canvas, PixieRect rect, rgba32 col
     }
 }
 
-void pixie_draw_hollow_rectangle(PixieCanvas *canvas, PixieRect rect, rgba32 color)
+void pixie_draw_hollow_rectangle(PixieCanvas *canvas, PixieRect rect, RGBA32 color)
 {
     assert(canvas->width > 0 && canvas->height > 0);
     size_t left = pixie_rect_left(&rect);
@@ -187,7 +187,7 @@ void pixie_draw_hollow_rectangle(PixieCanvas *canvas, PixieRect rect, rgba32 col
     PIXEL_AT(canvas, right, bottom) = color;
 }
 
-void pixie_draw_filled_ellipse(PixieCanvas *canvas, PixiePoint center, size_t a, size_t b, rgba32 color)
+void pixie_draw_filled_ellipse(PixieCanvas *canvas, PixiePoint center, size_t a, size_t b, RGBA32 color)
 {
     size_t cx = center.x, cy = center.y;
     assert(((cx + a) < canvas->width) && ((cy + b) < canvas->height));
@@ -250,7 +250,7 @@ void pixie_draw_filled_ellipse(PixieCanvas *canvas, PixiePoint center, size_t a,
     }
 }
 
-void pixie_draw_hollow_ellipse(PixieCanvas *canvas, PixiePoint center, size_t a, size_t b, rgba32 color)
+void pixie_draw_hollow_ellipse(PixieCanvas *canvas, PixiePoint center, size_t a, size_t b, RGBA32 color)
 {
     size_t cx = center.x, cy = center.y;
     assert(((cx + a) < canvas->width) && ((cy + b) < canvas->height));
@@ -313,7 +313,7 @@ void pixie_draw_hollow_ellipse(PixieCanvas *canvas, PixiePoint center, size_t a,
     }
 }
 
-void _draw_bottom_flat_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, PixiePoint p3, rgba32 color)
+void _draw_bottom_flat_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, PixiePoint p3, RGBA32 color)
 {
     float invslope1 = ((float)p2.x - (float)p1.x) / ((float)p2.y - (float)p1.y);
     float invslope2 = ((float)p3.x - (float)p1.x) / ((float)p3.y - (float)p1.y);
@@ -329,7 +329,7 @@ void _draw_bottom_flat_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p
     }
 }
 
-void _draw_top_flat_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, PixiePoint p3, rgba32 color)
+void _draw_top_flat_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, PixiePoint p3, RGBA32 color)
 {
     float invslope1 = ((float)p3.x - (float)p1.x) / ((float)p3.y - (float)p1.y);
     float invslope2 = ((float)p3.x - (float)p2.x) / ((float)p3.y - (float)p2.y);
@@ -345,7 +345,7 @@ void _draw_top_flat_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, 
     }
 }
 
-void pixie_draw_filled_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, PixiePoint p3, rgba32 color)
+void pixie_draw_filled_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, PixiePoint p3, RGBA32 color)
 {
     // http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
     if (p1.y > p2.y)
@@ -381,14 +381,14 @@ void pixie_draw_filled_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p
         _draw_top_flat_triangle(canvas, p2, p4, p3, color);
     }
 }
-void pixie_draw_hollow_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, PixiePoint p3, rgba32 color)
+void pixie_draw_hollow_triangle(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, PixiePoint p3, RGBA32 color)
 {
     _pixie_bresenham(canvas, p1, p2, color);
     _pixie_bresenham(canvas, p1, p3, color);
     _pixie_bresenham(canvas, p2, p3, color);
 }
 
-void _pixie_hline(PixieCanvas *canvas, size_t y, size_t xmin, size_t xmax, rgba32 color)
+void _pixie_hline(PixieCanvas *canvas, size_t y, size_t xmin, size_t xmax, RGBA32 color)
 {
     size_t max_x = (xmax >= canvas->width) ? canvas->width : xmax;
     for (size_t x = xmin; x < max_x; x++)
@@ -397,7 +397,7 @@ void _pixie_hline(PixieCanvas *canvas, size_t y, size_t xmin, size_t xmax, rgba3
     }
 }
 
-void pixie_draw_hline(PixieCanvas *canvas, size_t y, size_t xmin, size_t xmax, rgba32 color, size_t thickness)
+void pixie_draw_hline(PixieCanvas *canvas, size_t y, size_t xmin, size_t xmax, RGBA32 color, size_t thickness)
 {
     // fix so that n and n+1 is not the same.
     if (thickness == 0)
@@ -422,7 +422,7 @@ void pixie_draw_hline(PixieCanvas *canvas, size_t y, size_t xmin, size_t xmax, r
     }
 }
 
-void _pixie_vline(PixieCanvas *canvas, size_t x, size_t ymin, size_t ymax, rgba32 color)
+void _pixie_vline(PixieCanvas *canvas, size_t x, size_t ymin, size_t ymax, RGBA32 color)
 {
     size_t max_y = (ymax >= canvas->height) ? canvas->height : ymax;
     for (size_t y = ymin; y < max_y; y++)
@@ -431,7 +431,7 @@ void _pixie_vline(PixieCanvas *canvas, size_t x, size_t ymin, size_t ymax, rgba3
     }
 }
 
-void pixie_draw_vline(PixieCanvas *canvas, size_t x, size_t ymin, size_t ymax, rgba32 color, size_t thickness)
+void pixie_draw_vline(PixieCanvas *canvas, size_t x, size_t ymin, size_t ymax, RGBA32 color, size_t thickness)
 {
     // fix so that n and n+1 is not the same.
     if (thickness == 0)
@@ -455,7 +455,7 @@ void pixie_draw_vline(PixieCanvas *canvas, size_t x, size_t ymin, size_t ymax, r
     }
 }
 
-void pixie_draw_line(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, rgba32 color, size_t thickness)
+void pixie_draw_line(PixieCanvas *canvas, PixiePoint p1, PixiePoint p2, RGBA32 color, size_t thickness)
 {
     if (thickness == 0)
     {

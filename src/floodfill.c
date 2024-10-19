@@ -5,10 +5,10 @@
 #include "point_list.h"
 #include "rgba.h"
 
-void pixie_floodfill(PixieCanvas *canvas, PixiePoint seed, rgba32 fill_color)
+void pixie_floodfill(PixieCanvas *canvas, PixiePoint seed, RGBA32 fill_color)
 {
     assert((seed.x < canvas->width) && (seed.y < canvas->height));
-    rgba32 original_color = PIXEL_AT(canvas, seed.x, seed.y);
+    RGBA32 original_color = PIXEL_AT(canvas, seed.x, seed.y);
     if (fill_color == original_color)
     {
         return;
@@ -22,7 +22,7 @@ void pixie_floodfill(PixieCanvas *canvas, PixiePoint seed, rgba32 fill_color)
     while (stack.size > 0)
     {
         PixiePoint pt = pixie_point_list_pop_unsafe(&stack);
-        rgba32 pixel = PIXEL_AT(canvas, pt.x, pt.y);
+        RGBA32 pixel = PIXEL_AT(canvas, pt.x, pt.y);
         if (pixel != original_color)
         {
 

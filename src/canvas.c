@@ -9,7 +9,7 @@
 PixieCanvas pixie_canvas_new(size_t width, size_t height)
 {
     assert((width > 0) && (height > 0));
-    rgba32 *pixels = calloc(width * height, sizeof(rgba32));
+    RGBA32 *pixels = calloc(width * height, sizeof(RGBA32));
     assert(pixels != NULL);
     return (PixieCanvas){.width = width, .height = height, .stride = width, .pixels = pixels};
 }
@@ -19,7 +19,7 @@ PixieCanvas pixie_canvas_crop(PixieCanvas *canvas, PixieRect region)
     size_t right = pixie_rect_right(&region);
     size_t bottom = pixie_rect_bottom(&region);
     assert((region.w > 0) && (right < canvas->width) && (region.h > 0) && (bottom < canvas->height));
-    rgba32 *data = &PIXEL_AT_POINT(canvas, region.top_left);
+    RGBA32 *data = &PIXEL_AT_POINT(canvas, region.top_left);
     return (PixieCanvas){.width = region.w, .height = region.h, .stride = canvas->stride, .pixels = data};
 }
 
@@ -30,7 +30,7 @@ void pixie_canvas_free(PixieCanvas *canvas)
     canvas = NULL;
 }
 
-void pixie_canvas_fill(PixieCanvas *canvas, rgba32 color)
+void pixie_canvas_fill(PixieCanvas *canvas, RGBA32 color)
 {
     for (size_t y = 0; y < canvas->height; y++)
     {
@@ -43,9 +43,9 @@ void pixie_canvas_fill(PixieCanvas *canvas, rgba32 color)
 
 PixieCanvas pixie_canvas_copy(PixieCanvas *canvas)
 {
-    rgba32 *pixels = malloc(canvas->width * canvas->height * sizeof(rgba32));
+    RGBA32 *pixels = malloc(canvas->width * canvas->height * sizeof(RGBA32));
     assert(pixels != NULL);
-    memcpy(pixels, canvas->pixels, canvas->height * canvas->width * sizeof(rgba32));
+    memcpy(pixels, canvas->pixels, canvas->height * canvas->width * sizeof(RGBA32));
     return (PixieCanvas){.width = canvas->width, .height = canvas->height, .stride = canvas->stride, .pixels = pixels};
 }
 
@@ -74,10 +74,10 @@ void pixie_canvas_save_as_ppm(PixieCanvas *canvas, const char *file_path)
     {
         for (size_t x = 0; x < width - 1; ++x)
         {
-            rgba32 pixel = PIXEL_AT(canvas, x, y);
+            RGBA32 pixel = PIXEL_AT(canvas, x, y);
             fprintf(f, "%d %d %d ", PIXIE_RED(pixel), PIXIE_GREEN(pixel), PIXIE_BLUE(pixel));
         }
-        rgba32 pixel = PIXEL_AT(canvas, width - 1, y);
+        RGBA32 pixel = PIXEL_AT(canvas, width - 1, y);
         fprintf(f, "%d %d %d\n", PIXIE_RED(pixel), PIXIE_GREEN(pixel), PIXIE_BLUE(pixel));
     }
 

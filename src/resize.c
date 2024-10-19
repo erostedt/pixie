@@ -29,10 +29,10 @@ void pixie_resize_bilinear(PixieCanvas *canvas, size_t target_width, size_t targ
             size_t xlow = xl;
             size_t xhigh = ceilf(x);
 
-            rgba32 tl = PIXEL_AT(canvas, xlow, ylow);
-            rgba32 tr = PIXEL_AT(canvas, xhigh, ylow);
-            rgba32 bl = PIXEL_AT(canvas, xlow, yhigh);
-            rgba32 br = PIXEL_AT(canvas, xhigh, yhigh);
+            RGBA32 tl = PIXEL_AT(canvas, xlow, ylow);
+            RGBA32 tr = PIXEL_AT(canvas, xhigh, ylow);
+            RGBA32 bl = PIXEL_AT(canvas, xlow, yhigh);
+            RGBA32 br = PIXEL_AT(canvas, xhigh, yhigh);
 
             float tlw = one_minus_xw * one_minus_yw;
             float trw = xw * one_minus_yw;
